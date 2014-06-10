@@ -25,7 +25,6 @@ public class DatabaseTest{
 	/**
 	 * Make sure the is no logging reappearing for caching again.
 	 */
-	@Test
 	public static void main(String[] args){
 		try {
 			System.out.println("***START---");

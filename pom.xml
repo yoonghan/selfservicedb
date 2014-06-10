@@ -2,14 +2,14 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.jom.jaring</groupId>
   <artifactId>selfservicedb</artifactId>
-  <version>1.0.0</version>
-	<properties>
-	<jdbi.version>2.55</jdbi.version>
-	<guava.version>17.0</guava.version>
-	<mysql.version>5.1.30</mysql.version>
-	<junit.version>4.10</junit.version>
-	<jjutility.version>1.0.0</jjutility.version>
-	</properties>
+  <parent>
+  	<artifactId>selfserviceparent</artifactId>
+  	<groupId>jom.jaring</groupId>
+  	<version>1.0.0</version>
+  </parent>
+  <properties>
+  	<jjutility.version>1.0.0</jjutility.version>
+  </properties>
   <dependencies>
   	<dependency>
 	  <groupId>org.jdbi</groupId>
@@ -33,12 +33,6 @@
 		<version>${mysql.version}</version>
 		<scope>test</scope>
 	</dependency>
-	<dependency>
-		<groupId>junit</groupId>
-		<artifactId>junit</artifactId>
-		<version>${junit.version}</version>
-		<scope>test</scope>
-	</dependency>
   </dependencies>
   
   <build>
@@ -48,8 +42,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.1</version>
         <configuration>
-          <source>1.7</source>
-          <target>1.7</target>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
         </configuration>
       </plugin>
     </plugins>

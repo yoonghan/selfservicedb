@@ -1,47 +1,29 @@
 package com.self.care.store.jdbi.caches.impl;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 import com.self.care.store.jdbi.impl.JDBISetting;
+import com.self.care.store.jdbi.impl.PropertyFiles;
 import com.self.service.util.log.LogUtil;
+import com.self.service.util.log.PropertyLoaderUtil;
 
 class CachePropertyReader {
 
-	private final String PROPERTY_FILENAME="/selfservicecaching.properties";
+	private final String PROPERTY_FILENAME=PropertyFiles.CACHE_PROP;
 	private final String CLASS_LOCATION="com.self.care.store.jdbi.caches.impl.CachePropertyReader";
 	
 	private int timeValue = JDBISetting.TIME_DEFAULT_VALUE;
 	private TimeUnit timeUnit = JDBISetting.TIME_DEFAULT_UNIT;
 	
-	private final String TIME_UNIT_KEY = ".timeUnit";
-	private final String TIME_VALUE_KEY = ".timeValue";
-	
 	public CachePropertyReader(String cacheName){
 		initProperties(cacheName);
 	}
 	
-	private InputStream loadFile() throws ClassNotFoundException, FileNotFoundException{
-		InputStream input = Class.forName(
-				CLASS_LOCATION)
-				.getClassLoader().getResourceAsStream(
-						PROPERTY_FILENAME);
-		if (input == null)
-			input = Class.forName(
-					CLASS_LOCATION).getClass()
-					.getResourceAsStream(PROPERTY_FILENAME);
-		if (input == null)
-			input = new java.io.FileInputStream("."+PROPERTY_FILENAME);
-		return input;
-	}
-	
 	private void initProperties(String cacheName) {
-		Properties prop = new Properties();
 		try {
-			prop.load(loadFile());
+			Properties prop = new PropertyLoaderUtil().loadProperty(null, CLASS_LOCATION, PROPERTY_FILENAME);
 			loadPropertiesToVariable(prop, cacheName);
 		} catch (IOException | ClassNotFoundException e) {
 			LogUtil.getInstance(CLASS_LOCATION).warn("Load property error, loading default values:"+e.getMessage());
@@ -52,8 +34,8 @@ class CachePropertyReader {
 	}
 	
 	private void loadPropertiesToVariable(Properties prop, String cacheName){
-		String timeUnit = prop.getProperty(cacheName + TIME_UNIT_KEY);
-		String timeValue = prop.getProperty(cacheName + TIME_VALUE_KEY);
+		String timeUnit = prop.getProperty(cacheName + PropertyFiles.TIME_UNIT_KEY);
+		String timeValue = prop.getProperty(cacheName + PropertyFiles.TIME_VALUE_KEY);
 		try{
 			int time=Integer.parseInt(timeValue, 10);
 			setTimeValue(time);
@@ -79,7 +61,7 @@ class CachePropertyReader {
 			LogUtil.getInstance(CLASS_LOCATION).warn("Reset "+cacheName+", Invalid time unit not set");
 		}
 		
-		LogUtil.getInstance(CLASS_LOCATION).info("Setting :"+cacheName+TIME_UNIT_KEY+"="+timeUnit+","+cacheName+TIME_VALUE_KEY+"="+timeValue);
+		LogUtil.getInstance(CLASS_LOCATION).info("Setting :"+cacheName+ PropertyFiles.TIME_UNIT_KEY+"="+timeUnit+","+cacheName+ PropertyFiles.TIME_VALUE_KEY+"="+timeValue);
 	}
 
 	public int getTimeValue() {

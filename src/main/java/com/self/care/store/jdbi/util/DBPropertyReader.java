@@ -5,11 +5,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import com.self.care.store.jdbi.impl.PropertyFiles;
 import com.self.service.util.log.LogUtil;
 
 class DBPropertyReader {
 
-	private final String PROPERTY_FILENAME="/selfservicedb.properties";
+	private final String PROPERTY_FILENAME=PropertyFiles.DB_PROP;
 	private final String CLASS_LOCATION="com.self.care.store.jdbi.util.DBPropertyReader";
 	
 	private EnumConnectionType connectionType;
@@ -49,15 +50,15 @@ class DBPropertyReader {
 	private void loadPropertiesToVariable(Properties prop, String connName){
 		int connectionType = 1;
 		try{
-			connectionType = Integer.parseInt(prop.getProperty(connName+".conn.type"),10);
+			connectionType = Integer.parseInt(prop.getProperty(connName+PropertyFiles.CONN_TYPE),10);
 		}catch(NumberFormatException nfe){
 			LogUtil.getInstance(CLASS_LOCATION).error("Parsing wrong connection"+prop.getProperty(connName+".conn.type"));
 		}
 		this.setConnectionType(EnumConnectionType.valueOf(connectionType));
-		this.setConnectionURL(prop.getProperty(connName+".conn.url"));
-		this.setConnectionUserName(prop.getProperty(connName+".conn.username"));
-		this.setConnectionPassword(prop.getProperty(connName+".conn.password"));
-		this.setContextLookup(prop.getProperty(connName+".conn.lookup"));	
+		this.setConnectionURL(prop.getProperty(connName+PropertyFiles.CONN_URL));
+		this.setConnectionUserName(prop.getProperty(connName+PropertyFiles.CONN_USERNAME));
+		this.setConnectionPassword(prop.getProperty(connName+PropertyFiles.CONN_PASSWORD));
+		this.setContextLookup(prop.getProperty(connName+PropertyFiles.CONN_LOOKUP));	
 	}
 
 	public EnumConnectionType getConnectionType() {
