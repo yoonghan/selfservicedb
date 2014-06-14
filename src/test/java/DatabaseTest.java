@@ -93,4 +93,12 @@ public class DatabaseTest{
 		List<String> tags = TagCache.getInstance().getAll();
 		Assert.assertTrue(tags.size() >= 1);
 	}
+	
+	@Test
+	public void testRefresh(){
+		EnumCountryCache.getInstance().refreshCache();
+		CategoryCache.getInstance().refreshCache();
+		ImageCategoryCache.getInstance().refreshCache();
+		CategoryCache.getInstance().clearFindAllCache();
+	}
 }

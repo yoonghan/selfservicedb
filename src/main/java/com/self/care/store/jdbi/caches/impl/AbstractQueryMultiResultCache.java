@@ -10,12 +10,14 @@ import org.skife.jdbi.v2.DBI;
 import com.self.care.store.jdbi.impl.BasicJDBICommand;
 import com.self.care.store.jdbi.util.DataSourceHandler;
 
+import static com.self.care.store.jdbi.impl.PropertyFiles.*;
+
 public abstract class AbstractQueryMultiResultCache<T, V, U extends BasicJDBICommand<T>> 
 		extends AbstractQuerySingleResultCache<T, U>{
 	
 	private final String JDBI_NAME;
 	private final Class<U> SQL_OBJECT;
-	private final String CACHE_KEYWORD = ".all";
+	private final Timer timer = new Timer();
 	
 	private transient List<V> listOfRecords = null;
 	
@@ -24,11 +26,11 @@ public abstract class AbstractQueryMultiResultCache<T, V, U extends BasicJDBICom
 		this.JDBI_NAME=JDBI_NAME;
 		this.SQL_OBJECT=SQL_OBJECT;
 		
-		startRecordRefresher(cacheSettingName+CACHE_KEYWORD);
+		startRecordRefresher(cacheSettingName+CACHE_MULTI_KEYWORD);
 	}
 
-	private void startRecordRefresher(String cacheSettingName) {
-		Timer timer = new Timer();
+	public void startRecordRefresher(String cacheSettingName) {
+		
 		CachePropertyReader cacheReader = new CachePropertyReader(cacheSettingName);
 		
 		timer.scheduleAtFixedRate(new TimerTask(){
@@ -36,6 +38,11 @@ public abstract class AbstractQueryMultiResultCache<T, V, U extends BasicJDBICom
 				clearFindAllCache();
 			}
 		}, cacheReader.getConvertedTime(), cacheReader.getConvertedTime());
+	}
+	
+	public void stopRecordRefresher(){
+		timer.cancel();
+		timer.purge();
 	}
 	
 	public List<V> getAll(){
@@ -61,7 +68,8 @@ public abstract class AbstractQueryMultiResultCache<T, V, U extends BasicJDBICom
 	public void clearFindAllCache(){
 		List<V> clearRecord = listOfRecords;
 		listOfRecords = null;
-		clearRecord.clear();
+		if(clearRecord != null)
+			clearRecord.clear();
 	}
 	
 	protected abstract List<V> getReturnAllValue(U sqlConnection);

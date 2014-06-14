@@ -14,4 +14,5 @@ public interface PropertyFiles {
 	//for cache properties.
 	public final static String TIME_UNIT_KEY = ".timeUnit";
 	public final static String TIME_VALUE_KEY = ".timeValue";
+	public final String CACHE_MULTI_KEYWORD = ".all";
 }

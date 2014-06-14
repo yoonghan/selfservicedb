@@ -11,7 +11,7 @@ import com.self.care.store.jdbi.caches.EnumCountryCache;
 import com.self.care.store.jdbi.caches.EnumRatingCache;
 import com.self.care.store.jdbi.caches.UserCache;
 import com.self.care.store.jdbi.entity.ImageBean;
-import com.self.service.util.log.LogUtil;
+import com.self.service.logging.log.LogUtil;
 
 public class ImageMapper implements ResultSetMapper<ImageBean> {
 

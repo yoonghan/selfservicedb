@@ -12,7 +12,7 @@ import javax.sql.DataSource;
 import org.skife.jdbi.v2.DBI;
 
 import com.self.care.store.jdbi.impl.JDBISetting;
-import com.self.service.util.log.LogUtil;
+import com.self.service.logging.log.LogUtil;
 
 public class DataSourceHandler {
 	private final HashMap<String, DBI> DATA_SOURCE_CACHE;

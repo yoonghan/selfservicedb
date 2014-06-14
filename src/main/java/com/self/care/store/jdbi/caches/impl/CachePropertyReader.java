@@ -6,8 +6,8 @@ import java.util.concurrent.TimeUnit;
 
 import com.self.care.store.jdbi.impl.JDBISetting;
 import com.self.care.store.jdbi.impl.PropertyFiles;
-import com.self.service.util.log.LogUtil;
-import com.self.service.util.log.PropertyLoaderUtil;
+import com.self.service.logging.log.LogUtil;
+import com.self.service.util.common.PropertyLoaderUtil;
 
 class CachePropertyReader {
 
@@ -27,7 +27,6 @@ class CachePropertyReader {
 			loadPropertiesToVariable(prop, cacheName);
 		} catch (IOException | ClassNotFoundException e) {
 			LogUtil.getInstance(CLASS_LOCATION).warn("Load property error, loading default values:"+e.getMessage());
-			e.printStackTrace();
 			setTimeValue(JDBISetting.TIME_DEFAULT_VALUE);
 			setTimeUnit(JDBISetting.TIME_DEFAULT_UNIT);		
 		}

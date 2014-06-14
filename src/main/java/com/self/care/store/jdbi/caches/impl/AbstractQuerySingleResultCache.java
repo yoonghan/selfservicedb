@@ -11,7 +11,7 @@ import com.google.common.cache.LoadingCache;
 import com.self.care.store.jdbi.impl.BasicJDBICommand;
 import com.self.care.store.jdbi.impl.JDBISetting;
 import com.self.care.store.jdbi.util.DataSourceHandler;
-import com.self.service.util.log.LogUtil;
+import com.self.service.logging.log.LogUtil;
 
 public abstract class AbstractQuerySingleResultCache<T, U extends BasicJDBICommand<T>> {
 	
