@@ -13,11 +13,15 @@ import com.self.care.store.jdbi.caches.ImageCache;
 import com.self.care.store.jdbi.caches.ImageCategoryCache;
 import com.self.care.store.jdbi.caches.ImageCounterCache;
 import com.self.care.store.jdbi.caches.ImageTagCache;
+import com.self.care.store.jdbi.caches.MenuCache;
+import com.self.care.store.jdbi.caches.MenuListCache;
 import com.self.care.store.jdbi.caches.TagCache;
 import com.self.care.store.jdbi.caches.UserCache;
 import com.self.care.store.jdbi.entity.EnumCountryBean;
 import com.self.care.store.jdbi.entity.EnumRatingBean;
 import com.self.care.store.jdbi.entity.ImageBean;
+import com.self.care.store.jdbi.entity.MenuBean;
+import com.self.care.store.jdbi.entity.MenuListBean;
 import com.self.care.store.jdbi.entity.UserBean;
 
 public class DatabaseTest{
@@ -79,6 +83,14 @@ public class DatabaseTest{
 			Assert.assertEquals(1, lib2.size());
 			if(lib2.size()==1)
 				Assert.assertEquals(TEST_STRING_VALUE, lib2.get(0).getName());
+			
+			MenuBean menu = MenuCache.getInstance().getValue(DEFAULT_KEY_VALUE);
+			Assert.assertEquals(TEST_STRING_VALUE, menu.getTextDisplay());
+			
+			List<MenuListBean> menuList = MenuListCache.getInstance().getValue(DEFAULT_KEY_VALUE);
+			Assert.assertEquals(1, menuList.size());
+			if(menuList.size()==1)
+				Assert.assertEquals(TEST_STRING_VALUE, menuList.get(0).getMenu().getTextDisplay());
 			
 		} catch (ExecutionException e) {
 			e.printStackTrace();
