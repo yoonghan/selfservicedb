@@ -1,5 +1,6 @@
 package com.self.care.store.jdbi.caches.impl;
 
+import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -10,8 +11,10 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.self.care.store.jdbi.impl.BasicJDBICommand;
 import com.self.care.store.jdbi.impl.JDBISetting;
+import com.self.care.store.jdbi.impl.PropertyFiles;
 import com.self.care.store.jdbi.util.DataSourceHandler;
 import com.self.service.logging.log.LogUtil;
+import com.self.service.util.common.PropertyLoaderUtil;
 
 public abstract class AbstractQuerySingleResultCache<T, U extends BasicJDBICommand<T>> {
 	
@@ -43,8 +46,16 @@ public abstract class AbstractQuerySingleResultCache<T, U extends BasicJDBIComma
 	protected AbstractQuerySingleResultCache(String JDBI_NAME, Class<U> SQL_OBJECT, String cacheSettingName){
 		this.JDBI_NAME = JDBI_NAME;
 		this.SQL_OBJECT = SQL_OBJECT;
-		CachePropertyReader cachePropReader = new CachePropertyReader(cacheSettingName);
-		this.RESULT_SOURCE_CACHE = initCacheLoader(JDBISetting.RESULT_CACHE_SIZE, cachePropReader.getTimeValue(), cachePropReader.getTimeUnit());
+
+		CachePropertyBean cacheBean = new CachePropertyBean(cacheSettingName);
+		
+		try {
+			new PropertyLoaderUtil().loadProperty(PropertyFiles.CACHE_PROP, cacheBean);
+		} catch (IOException | ClassNotFoundException | IllegalAccessException e) {
+			LogUtil.getInstance(this.getClass().getName()).warn("Load property error, loading default values:"+e.getMessage());
+		}
+		
+		this.RESULT_SOURCE_CACHE = initCacheLoader(JDBISetting.RESULT_CACHE_SIZE, cacheBean.getTimeValue(), cacheBean.getTimeUnit());
 		LogUtil.getInstance(this.getClass().getName()).info("Cache Instance created.");
 	}
 	
@@ -57,7 +68,6 @@ public abstract class AbstractQuerySingleResultCache<T, U extends BasicJDBIComma
 	
 	private T queryValue(String key){
 		T returnValue = null;
-		
 		try {
 			DBI dbConn = DataSourceHandler.getInstance().getDataSource(JDBI_NAME);
 			U object = dbConn.open(SQL_OBJECT);

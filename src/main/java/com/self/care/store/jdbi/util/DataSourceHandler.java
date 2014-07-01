@@ -1,5 +1,6 @@
 package com.self.care.store.jdbi.util;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.concurrent.ExecutionException;
@@ -12,13 +13,12 @@ import javax.sql.DataSource;
 import org.skife.jdbi.v2.DBI;
 
 import com.self.care.store.jdbi.impl.JDBISetting;
+import com.self.care.store.jdbi.impl.PropertyFiles;
 import com.self.service.logging.log.LogUtil;
+import com.self.service.util.common.PropertyLoaderUtil;
 
 public class DataSourceHandler {
 	private final HashMap<String, DBI> DATA_SOURCE_CACHE;
-	
-	//Create a property reader that read database only when needed. once done let garbage collector to claim this.
-	private DBPropertyReader propReader;
 	
 	private final String CLASSNAME = this.getClass().getName(); 
 	
@@ -38,43 +38,45 @@ public class DataSourceHandler {
 		DBI dbConn = getDataSourceCache(dsName);
 		
 		if( dbConn == null){
-			propReader = loadProperty(dsName);
-			
-			if(propReader != null)
-				dbConn = getConnection(dsName);
-			
-			if(dbConn != null){
-				DATA_SOURCE_CACHE.put(dsName, dbConn);
+			DBPropertyBean propBean = new DBPropertyBean(dsName);
+			try {
+				new PropertyLoaderUtil().loadProperty(PropertyFiles.DB_PROP, propBean);
+				
+				if(propBean != null)
+					dbConn = getConnection(dsName, propBean);
+				
+				if(dbConn != null){
+					DATA_SOURCE_CACHE.put(dsName, dbConn);
+				}
+				
+			} catch (ClassNotFoundException | IllegalAccessException| IOException e) {
+				LogUtil.getInstance(CLASSNAME).error("Database properties no readable"+PropertyFiles.CACHE_PROP, e);;
 			}
 			
 		}
 		return dbConn;
 	}
 	
-	private DBPropertyReader loadProperty(String dsName) {
-		return new DBPropertyReader(dsName);
-	}
-	
 	private DBI getDataSourceCache(String dsName){
 		return DATA_SOURCE_CACHE.get(dsName);
 	}
 
-	private synchronized DBI getConnection(final String dsName){
+	private synchronized DBI getConnection(final String dsName, DBPropertyBean propBean){
 		
 		//retry obtaining source as method is synchronized for wait.
 		DBI dbi = getDataSourceCache(dsName);
 		
 		if(dbi == null){
 			
-			switch(propReader.getConnectionType()){
+			switch(propBean.getConnectionType()){
 			
 			//Database connection using query strings.
 			case CONNECTION_QUERY:
-				dbi = connectViaConnectionQuery(dsName);
+				dbi = connectViaConnectionQuery(dsName, propBean);
 				break;
 			//Database connection using data source.
 			case DATASOURCE:
-				dbi = connectViaDataSource(dsName);
+				dbi = connectViaDataSource(dsName, propBean);
 				break;
 			}
 			
@@ -89,15 +91,15 @@ public class DataSourceHandler {
 		return dbi;
 	}
 
-	private DBI connectViaConnectionQuery(String dsName) {
-		String jdbc_url = propReader.getConnectionURL();
+	private DBI connectViaConnectionQuery(String dsName, DBPropertyBean propBean) {
+		String jdbc_url = propBean.getConnectionURL();
 		
 		LogUtil.getInstance(CLASSNAME).info("Connected to JDBC:"+jdbc_url);
 		
-		return new DBI(jdbc_url,propReader.getConnectionUserName(), propReader.getConnectionPassword());
+		return new DBI(jdbc_url,propBean.getConnectionUserName(), propBean.getConnectionPassword());
 	}
 
-	private DBI connectViaDataSource(String dsName) {
+	private DBI connectViaDataSource(String dsName, DBPropertyBean propBean) {
 		Context initContext;
 		DataSource datasource = null;
 		
@@ -108,7 +110,7 @@ public class DataSourceHandler {
 			connectionSetup.put("jnp.sotimeout", JDBISetting.CONNECTION_TIMEOUT);
 			
 			initContext = new InitialContext(connectionSetup);
-			datasource  = (DataSource)initContext.lookup(propReader.getContextLookup());
+			datasource  = (DataSource)initContext.lookup(propBean.getContextLookup());
 			
 			LogUtil.getInstance(CLASSNAME).info("Connected to data source:"+dsName);
 			

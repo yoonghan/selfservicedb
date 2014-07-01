@@ -113,4 +113,32 @@ public class DatabaseTest{
 		ImageCategoryCache.getInstance().refreshCache();
 		CategoryCache.getInstance().clearFindAllCache();
 	}
+	
+	@Test
+	public void testInvalidateCache(){
+		try {
+			MenuBean mbean = MenuCache.getInstance().getValue("-1");
+			MenuCache.getInstance().refreshCache();
+			MenuBean mbean2 = MenuCache.getInstance().getValue("-1");
+			Assert.assertFalse(mbean==mbean2);
+			
+			List<MenuListBean> mbean3 = MenuListCache.getInstance().getValue("-1");
+			MenuListCache.getInstance().refreshCache();
+			List<MenuListBean> mbean4 = MenuListCache.getInstance().getValue("-1");
+			Assert.assertFalse(mbean3==mbean4);
+			
+			
+			mbean = MenuCache.getInstance().getValue("-1");
+			mbean2 = MenuCache.getInstance().getValue("-1");
+			Assert.assertTrue(mbean==mbean2);
+			
+			mbean3 = MenuListCache.getInstance().getValue("-1");
+			mbean4 = MenuListCache.getInstance().getValue("-1");
+			Assert.assertTrue(mbean3==mbean4);
+			
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+		}
+		
+	}
 }

@@ -38,6 +38,12 @@
 		<version>${mysql.version}</version>
 		<scope>test</scope>
 	</dependency>
+	<dependency>
+	    <groupId>org.quartz-scheduler</groupId>
+	    <artifactId>quartz</artifactId>
+	    <version>${quartz.version}</version>
+	    <scope>test</scope>
+	</dependency>
   </dependencies>
   
   <build>

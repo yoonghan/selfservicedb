@@ -1,5 +1,6 @@
 package com.self.care.store.jdbi.caches.impl;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -8,7 +9,10 @@ import java.util.concurrent.ExecutionException;
 import org.skife.jdbi.v2.DBI;
 
 import com.self.care.store.jdbi.impl.BasicJDBICommand;
+import com.self.care.store.jdbi.impl.PropertyFiles;
 import com.self.care.store.jdbi.util.DataSourceHandler;
+import com.self.service.logging.log.LogUtil;
+import com.self.service.util.common.PropertyLoaderUtil;
 
 import static com.self.care.store.jdbi.impl.PropertyFiles.*;
 
@@ -31,13 +35,19 @@ public abstract class AbstractQueryMultiResultCache<T, V, U extends BasicJDBICom
 
 	public void startRecordRefresher(String cacheSettingName) {
 		
-		CachePropertyReader cacheReader = new CachePropertyReader(cacheSettingName);
+		CachePropertyBean cacheBean = new CachePropertyBean(cacheSettingName);
+		
+		try {
+			new PropertyLoaderUtil().loadProperty(PropertyFiles.CACHE_PROP, cacheBean);
+		} catch (IOException | ClassNotFoundException | IllegalAccessException e) {
+			LogUtil.getInstance(this.getClass().getName()).warn("Load property error, loading default values:"+e.getMessage());
+		}
 		
 		timer.scheduleAtFixedRate(new TimerTask(){
 			public void run() {
 				clearFindAllCache();
 			}
-		}, cacheReader.getConvertedTime(), cacheReader.getConvertedTime());
+		}, cacheBean.getConvertedTime(), cacheBean.getConvertedTime());
 	}
 	
 	public void stopRecordRefresher(){

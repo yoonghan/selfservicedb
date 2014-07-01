@@ -1,47 +1,39 @@
 package com.self.care.store.jdbi.util;
 
-import java.io.IOException;
 import java.util.Properties;
 
 import com.self.care.store.jdbi.impl.PropertyFiles;
 import com.self.service.logging.log.LogUtil;
-import com.self.service.util.common.PropertyLoaderUtil;
+import com.self.service.util.impl.PropertyMapperImpl;
 
-class DBPropertyReader {
+class DBPropertyBean implements PropertyMapperImpl {
 
-	private final String CLASS_LOCATION="com.self.care.store.jdbi.util.DBPropertyReader";
-	
 	private EnumConnectionType connectionType;
 	private String connectionURL;
 	private String connectionUserName;
 	private String connectionPassword;
 	private String contextLookup;
 	
-	public DBPropertyReader(String connName){
-		initProperties(connName);
-	}
-		
-	private void initProperties(String connName) {
-		try {
-			Properties prop = new PropertyLoaderUtil().loadProperty(null, CLASS_LOCATION, PropertyFiles.DB_PROP); 
-			loadPropertiesToVariable(prop, connName);
-		} catch (IOException | ClassNotFoundException e) {
-			LogUtil.getInstance(CLASS_LOCATION).error("Load property error", e);
-		}
+	private final String CONN_NAME;
+	
+	public DBPropertyBean(String connName){
+		CONN_NAME=connName;
 	}
 	
-	private void loadPropertiesToVariable(Properties prop, String connName){
+	
+	@Override
+	public void map(Properties property) throws IllegalAccessException {
 		int connectionType = 1;
 		try{
-			connectionType = Integer.parseInt(prop.getProperty(connName+PropertyFiles.CONN_TYPE),10);
+			connectionType = Integer.parseInt(property.getProperty(CONN_NAME+PropertyFiles.CONN_TYPE),10);
 		}catch(NumberFormatException nfe){
-			LogUtil.getInstance(CLASS_LOCATION).error("Parsing wrong connection"+prop.getProperty(connName+".conn.type"));
+			LogUtil.getInstance(this.getClass().getName()).error("Parsing wrong connection"+property.getProperty(CONN_NAME+".conn.type"));
 		}
 		this.setConnectionType(EnumConnectionType.valueOf(connectionType));
-		this.setConnectionURL(prop.getProperty(connName+PropertyFiles.CONN_URL));
-		this.setConnectionUserName(prop.getProperty(connName+PropertyFiles.CONN_USERNAME));
-		this.setConnectionPassword(prop.getProperty(connName+PropertyFiles.CONN_PASSWORD));
-		this.setContextLookup(prop.getProperty(connName+PropertyFiles.CONN_LOOKUP));	
+		this.setConnectionURL(property.getProperty(CONN_NAME+PropertyFiles.CONN_URL));
+		this.setConnectionUserName(property.getProperty(CONN_NAME+PropertyFiles.CONN_USERNAME));
+		this.setConnectionPassword(property.getProperty(CONN_NAME+PropertyFiles.CONN_PASSWORD));
+		this.setContextLookup(property.getProperty(CONN_NAME+PropertyFiles.CONN_LOOKUP));	
 	}
 
 	public EnumConnectionType getConnectionType() {
