@@ -1,7 +1,5 @@
 package com.self.care.store.jdbi.entity;
 
-import java.sql.Date;
-
 public class MenuBean{
 	private Short menuId;
 	private String toolTip;
@@ -9,8 +7,6 @@ public class MenuBean{
 	private String imageURI;
 	private String linkURI;
 	private Integer enumTypeId;
-	private Date cDate;
-	private Date mDate;
 	
 	public Short getMenuId() {
 		return menuId;
@@ -58,21 +54,5 @@ public class MenuBean{
 
 	public void setEnumTypeId(Integer enumTypeId) {
 		this.enumTypeId = enumTypeId;
-	}
-
-	public Date getcDate() {
-		return cDate;
-	}
-
-	public void setcDate(Date cDate) {
-		this.cDate = cDate;
-	}
-
-	public Date getmDate() {
-		return mDate;
-	}
-
-	public void setmDate(Date mDate) {
-		this.mDate = mDate;
 	}
 }
