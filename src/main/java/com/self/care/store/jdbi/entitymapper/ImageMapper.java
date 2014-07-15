@@ -11,11 +11,12 @@ import com.self.care.store.jdbi.caches.EnumCountryCache;
 import com.self.care.store.jdbi.caches.EnumRatingCache;
 import com.self.care.store.jdbi.caches.UserCache;
 import com.self.care.store.jdbi.entity.ImageBean;
-import com.self.service.logging.log.LogUtil;
+import com.self.service.logging.impl.Log;
+import com.self.service.logging.log.LogFactory;
 
 public class ImageMapper implements ResultSetMapper<ImageBean> {
 
-	private final String CLASS_NAME = this.getClass().getName();
+	private final Log log = LogFactory.getLogger(this.getClass().getName());
 	
 	@Override
 	public ImageBean map(int index, ResultSet rs, StatementContext ctx)
@@ -41,7 +42,7 @@ public class ImageMapper implements ResultSetMapper<ImageBean> {
 		try {
 			ib.setCountry(EnumCountryCache.getInstance().getValue(enumCountryId));
 		} catch (ExecutionException e1) {
-			LogUtil.getInstance(CLASS_NAME).info("Unable to get countryId:"+enumCountryId);
+			log.info("Unable to get countryId:"+enumCountryId);
 		}
 		
 		String userId = rs.getString("cUser");
@@ -49,7 +50,7 @@ public class ImageMapper implements ResultSetMapper<ImageBean> {
 		try {
 			ib.setUser(UserCache.getInstance().getValue(userId));
 		} catch (ExecutionException e) {
-			LogUtil.getInstance(CLASS_NAME).info("Unable to get userId:"+userId);
+			log.info("Unable to get userId:"+userId);
 		}
 		
 		Integer enumRatingId = rs.getInt("enumRatingId");
@@ -57,7 +58,7 @@ public class ImageMapper implements ResultSetMapper<ImageBean> {
 		try {
 			ib.setRating(EnumRatingCache.getInstance().getValue(enumRatingId.toString()));
 		} catch (ExecutionException e) {
-			LogUtil.getInstance(CLASS_NAME).info("Unable to get ratingId:"+enumRatingId);
+			log.info("Unable to get ratingId:"+enumRatingId);
 		}
 		
 		return ib;

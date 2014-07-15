@@ -5,12 +5,13 @@ import java.util.concurrent.TimeUnit;
 
 import com.self.care.store.jdbi.impl.JDBISetting;
 import com.self.care.store.jdbi.impl.PropertyFiles;
-import com.self.service.logging.log.LogUtil;
+import com.self.service.logging.impl.Log;
+import com.self.service.logging.log.LogFactory;
 import com.self.service.util.impl.PropertyMapperImpl;
 
 class CachePropertyBean implements PropertyMapperImpl {
-
-	private final String CLASS_LOCATION = CachePropertyBean.class.getName();
+	
+	private final Log log = LogFactory.getLogger("com.self.care.store.jdbi.caches.impl.CachePropertyBean");
 	
 	private final String CACHE_NAME;
 
@@ -28,7 +29,7 @@ class CachePropertyBean implements PropertyMapperImpl {
 			int time=Integer.parseInt(timeValue, 10);
 			setTimeValue(time);
 		}catch(Exception e){
-			LogUtil.getInstance(CLASS_LOCATION).warn("Reset "+CACHE_NAME+", Invalid time setting:"+timeValue);
+			log.warn("Reset "+CACHE_NAME+", Invalid time setting:"+timeValue);
 		}
 		
 		if(timeUnit != null){
@@ -43,13 +44,13 @@ class CachePropertyBean implements PropertyMapperImpl {
 				setTimeUnit(TimeUnit.DAYS);
 				break;
 			default:
-				LogUtil.getInstance(CLASS_LOCATION).warn("Reset "+CACHE_NAME+", Invalid time unit:"+timeUnit);
+				log.warn("Reset "+CACHE_NAME+", Invalid time unit:"+timeUnit);
 			}
 		}else{
-			LogUtil.getInstance(CLASS_LOCATION).warn("Reset "+CACHE_NAME+", Invalid time unit not set");
+			log.warn("Reset "+CACHE_NAME+", Invalid time unit not set");
 		}
-		
-		LogUtil.getInstance(CLASS_LOCATION).info("Setting :"+CACHE_NAME+ PropertyFiles.TIME_UNIT_KEY+"="+timeUnit+","+CACHE_NAME+ PropertyFiles.TIME_VALUE_KEY+"="+timeValue);
+
+		log.info("Setting :"+CACHE_NAME+ PropertyFiles.TIME_UNIT_KEY+"="+timeUnit+","+CACHE_NAME+ PropertyFiles.TIME_VALUE_KEY+"="+timeValue);
 	}
 
 	public int getTimeValue() {

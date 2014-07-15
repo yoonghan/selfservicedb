@@ -5,13 +5,17 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 import org.skife.jdbi.v2.DBI;
 
 import com.self.care.store.jdbi.impl.BasicJDBICommand;
 import com.self.care.store.jdbi.impl.PropertyFiles;
 import com.self.care.store.jdbi.util.DataSourceHandler;
-import com.self.service.logging.log.LogUtil;
+import com.self.service.logging.impl.Log;
+import com.self.service.logging.log.LogFactory;
 import com.self.service.util.common.PropertyLoaderUtil;
 
 import static com.self.care.store.jdbi.impl.PropertyFiles.*;
@@ -19,9 +23,11 @@ import static com.self.care.store.jdbi.impl.PropertyFiles.*;
 public abstract class AbstractQueryMultiResultCache<T, V, U extends BasicJDBICommand<T>> 
 		extends AbstractQuerySingleResultCache<T, U>{
 	
+	private final Log log = LogFactory.getLogger(this.getClass().getName());
+	
 	private final String JDBI_NAME;
 	private final Class<U> SQL_OBJECT;
-	private final Timer timer = new Timer();
+	private ScheduledExecutorService executor;
 	
 	private transient List<V> listOfRecords = null;
 	
@@ -40,19 +46,18 @@ public abstract class AbstractQueryMultiResultCache<T, V, U extends BasicJDBICom
 		try {
 			new PropertyLoaderUtil().loadProperty(PropertyFiles.CACHE_PROP, cacheBean);
 		} catch (IOException | ClassNotFoundException | IllegalAccessException e) {
-			LogUtil.getInstance(this.getClass().getName()).warn("Load property error, loading default values:"+e.getMessage());
+			log.warn("Load property error, loading default values:"+e.getMessage());
 		}
-		
-		timer.scheduleAtFixedRate(new TimerTask(){
+		executor = Executors.newSingleThreadScheduledExecutor();
+		executor.scheduleAtFixedRate(new Runnable(){
 			public void run() {
 				clearFindAllCache();
 			}
-		}, cacheBean.getConvertedTime(), cacheBean.getConvertedTime());
+		}, cacheBean.getConvertedTime(), cacheBean.getConvertedTime(), cacheBean.getTimeUnit());
 	}
 	
 	public void stopRecordRefresher(){
-		timer.cancel();
-		timer.purge();
+		executor.shutdown();
 	}
 	
 	public List<V> getAll(){

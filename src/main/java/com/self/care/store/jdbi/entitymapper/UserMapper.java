@@ -15,7 +15,24 @@ public class UserMapper implements ResultSetMapper<UserBean>{
 			throws SQLException {
 		UserBean ub = new UserBean();
 		ub.setIdentity(rs.getString("identity"));
-		ub.setUserId(rs.getString("userId"));
+		ub.setUserId(rs.getLong("userId"));
+		ub.setTypeMap(rs.getInt("typeMap"));
+		ub.setEmail(rs.getString("email"));
+		ub.setName(rs.getString("name"));
+		ub.setStatus(rs.getShort("status"));
+		
+		try{
+			ub.setFacebookAuthId(rs.getString("facebookAuthId"));
+		}catch(SQLException sqle){
+			//do nothing if this is not selected.
+		}
+		
+		try{
+			ub.setGoogleAuthId(rs.getString("googleAuthId"));
+		}catch(SQLException sqle){
+			//do nothing if this is not selected.
+		}
+		
 		return ub;
 	}
 

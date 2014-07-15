@@ -82,7 +82,7 @@ public class DatabaseTest{
 			List<ImageBean> lib2 =ImageTagCache.getInstance().getValue(DEFAULT_KEY_VALUE);
 			Assert.assertEquals(1, lib2.size());
 			if(lib2.size()==1)
-				Assert.assertEquals(TEST_STRING_VALUE, lib2.get(0).getName());
+				Assert.assertEquals(TEST_STRING_VALUE, lib.get(0).getName());
 			
 			MenuBean menu = MenuCache.getInstance().getValue(DEFAULT_KEY_VALUE);
 			Assert.assertEquals(TEST_STRING_VALUE, menu.getTextDisplay());

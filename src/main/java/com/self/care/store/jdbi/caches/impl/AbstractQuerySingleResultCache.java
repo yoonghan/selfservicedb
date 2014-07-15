@@ -13,10 +13,13 @@ import com.self.care.store.jdbi.impl.BasicJDBICommand;
 import com.self.care.store.jdbi.impl.JDBISetting;
 import com.self.care.store.jdbi.impl.PropertyFiles;
 import com.self.care.store.jdbi.util.DataSourceHandler;
-import com.self.service.logging.log.LogUtil;
+import com.self.service.logging.impl.Log;
+import com.self.service.logging.log.LogFactory;
 import com.self.service.util.common.PropertyLoaderUtil;
 
 public abstract class AbstractQuerySingleResultCache<T, U extends BasicJDBICommand<T>> {
+	
+	private final Log log = LogFactory.getLogger("com.self.care.store.jdbi.caches.impl.AbstractQuerySingleResultCache");
 	
 	private final LoadingCache<String, T> RESULT_SOURCE_CACHE;
 	private final String JDBI_NAME;
@@ -52,11 +55,11 @@ public abstract class AbstractQuerySingleResultCache<T, U extends BasicJDBIComma
 		try {
 			new PropertyLoaderUtil().loadProperty(PropertyFiles.CACHE_PROP, cacheBean);
 		} catch (IOException | ClassNotFoundException | IllegalAccessException e) {
-			LogUtil.getInstance(this.getClass().getName()).warn("Load property error, loading default values:"+e.getMessage());
+			log.warn("Load property error, loading default values:"+e.getMessage());
 		}
 		
 		this.RESULT_SOURCE_CACHE = initCacheLoader(JDBISetting.RESULT_CACHE_SIZE, cacheBean.getTimeValue(), cacheBean.getTimeUnit());
-		LogUtil.getInstance(this.getClass().getName()).info("Cache Instance created.");
+		log.info("Cache Instance created.");
 	}
 	
 	/**
@@ -90,6 +93,11 @@ public abstract class AbstractQuerySingleResultCache<T, U extends BasicJDBIComma
 	
 	public void refreshCache(){
 		RESULT_SOURCE_CACHE.invalidateAll();
+	}
+	
+	public void refreshOnIdCache(String id){
+		if(id !=null && id.isEmpty() == false)
+			RESULT_SOURCE_CACHE.invalidate(id);
 	}
 
 	protected abstract T getDefaultValueIfNull();

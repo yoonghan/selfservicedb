@@ -4,34 +4,24 @@ import com.self.care.store.jdbi.caches.impl.AbstractQuerySingleResultCache;
 import com.self.care.store.jdbi.entity.UserBean;
 import com.self.care.store.jdbi.impl.JDBISetting;
 import com.self.care.store.jdbi.sql.UserJDBI;
-import com.self.service.logging.impl.Log;
-import com.self.service.logging.log.LogFactory;
 
-public class UserCache extends AbstractQuerySingleResultCache<UserBean, UserJDBI>{
-	
-	private final Log log = LogFactory.getLogger("com.self.care.store.jdbi.caches.UserCache");
+public class FacebookUserCache extends AbstractQuerySingleResultCache<UserBean, UserJDBI>{
 	
 	static final class Singleton{
-		public static final UserCache instance = new UserCache();
+		public static final FacebookUserCache instance = new FacebookUserCache();
 	}
 	
-	private UserCache() {
+	private FacebookUserCache() {
 		super(JDBISetting.IMG_CONNECTION_SERVICE, UserJDBI.class,"user");
 	}
 
-	public static UserCache getInstance(){
+	public static FacebookUserCache getInstance(){
 		return Singleton.instance;
 	}
 
 	@Override
 	protected UserBean getReturnValue(String key, UserJDBI sqlConnectionObject) {
-		UserBean value = null;
-		try{
-			long keyVal = Long.parseLong(key,10);
-			value = sqlConnectionObject.select(keyVal);
-		}catch(Exception e){
-			log.error("Invalid key for parsing captured:"+key, e);
-		}
+		UserBean value = sqlConnectionObject.selectViaFacebookId(key);
 		return value;
 	}
 	

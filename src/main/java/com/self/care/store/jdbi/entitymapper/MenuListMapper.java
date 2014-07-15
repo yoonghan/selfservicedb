@@ -9,11 +9,12 @@ import org.skife.jdbi.v2.tweak.ResultSetMapper;
 
 import com.self.care.store.jdbi.caches.MenuCache;
 import com.self.care.store.jdbi.entity.MenuListBean;
-import com.self.service.logging.log.LogUtil;
+import com.self.service.logging.impl.Log;
+import com.self.service.logging.log.LogFactory;
 
 public class MenuListMapper implements ResultSetMapper<MenuListBean> {
 
-	private final String CLASS_NAME = this.getClass().getName();
+	private final Log log = LogFactory.getLogger(this.getClass().getName());
 	
 	@Override
 	public MenuListBean map(int index, ResultSet rs, StatementContext ctx)
@@ -26,7 +27,7 @@ public class MenuListMapper implements ResultSetMapper<MenuListBean> {
 		try {
 			mlb.setMenu(MenuCache.getInstance().getValue(""+menuId));
 		} catch (ExecutionException e) {
-			LogUtil.getInstance(CLASS_NAME).error("Invalid menuItem"+menuId,e);
+			log.error("Invalid menuItem"+menuId,e);
 		}
 		
 		mlb.setMenuId(menuId);

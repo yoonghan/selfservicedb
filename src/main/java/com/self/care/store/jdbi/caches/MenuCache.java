@@ -4,11 +4,12 @@ import com.self.care.store.jdbi.caches.impl.AbstractQuerySingleResultCache;
 import com.self.care.store.jdbi.entity.MenuBean;
 import com.self.care.store.jdbi.impl.JDBISetting;
 import com.self.care.store.jdbi.sql.MenuJDBI;
-import com.self.service.logging.log.LogUtil;
+import com.self.service.logging.impl.Log;
+import com.self.service.logging.log.LogFactory;
 
 public class MenuCache extends AbstractQuerySingleResultCache<MenuBean, MenuJDBI> {
 
-	private final String CLASS_NAME = this.getClass().getName();
+	private final Log log = LogFactory.getLogger(this.getClass().getName());
 	
 	static final class Singleton{
 		public static final MenuCache instance = new MenuCache();
@@ -28,7 +29,7 @@ public class MenuCache extends AbstractQuerySingleResultCache<MenuBean, MenuJDBI
 		try{
 			intMenuId = Integer.parseInt(menuId,10);
 		}catch(Exception e){
-			LogUtil.getInstance(CLASS_NAME).error("Invalid menuId:"+menuId);
+			log.error("Invalid menuId:"+menuId);
 		}
 		
 		MenuBean menuBean = sqlConnectionObject.select(intMenuId);

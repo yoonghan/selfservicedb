@@ -16,11 +16,11 @@ public class CategoryCache extends AbstractQueryMultiResultCache<String, Categor
 	private CategoryCache() {
 		super(JDBISetting.IMG_CONNECTION_SERVICE, CategoryJDBI.class, "category");
 	}
-
+	
 	public static CategoryCache getInstance(){
 		return Singleton.instance;
 	}
-	
+
 	@Override
 	protected String getReturnValue(String key, CategoryJDBI sqlConnectionObject) {
 		String value = sqlConnectionObject.select(key);

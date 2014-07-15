@@ -3,11 +3,14 @@ package com.self.care.store.jdbi.util;
 import java.util.Properties;
 
 import com.self.care.store.jdbi.impl.PropertyFiles;
-import com.self.service.logging.log.LogUtil;
+import com.self.service.logging.impl.Log;
+import com.self.service.logging.log.LogFactory;
 import com.self.service.util.impl.PropertyMapperImpl;
 
 class DBPropertyBean implements PropertyMapperImpl {
 
+	private final Log log = LogFactory.getLogger(this.getClass().getName());
+	
 	private EnumConnectionType connectionType;
 	private String connectionURL;
 	private String connectionUserName;
@@ -27,7 +30,7 @@ class DBPropertyBean implements PropertyMapperImpl {
 		try{
 			connectionType = Integer.parseInt(property.getProperty(CONN_NAME+PropertyFiles.CONN_TYPE),10);
 		}catch(NumberFormatException nfe){
-			LogUtil.getInstance(this.getClass().getName()).error("Parsing wrong connection"+property.getProperty(CONN_NAME+".conn.type"));
+			log.error("Parsing wrong connection"+property.getProperty(CONN_NAME+".conn.type"));
 		}
 		this.setConnectionType(EnumConnectionType.valueOf(connectionType));
 		this.setConnectionURL(property.getProperty(CONN_NAME+PropertyFiles.CONN_URL));

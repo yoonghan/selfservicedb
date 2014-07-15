@@ -14,13 +14,14 @@ import org.skife.jdbi.v2.DBI;
 
 import com.self.care.store.jdbi.impl.JDBISetting;
 import com.self.care.store.jdbi.impl.PropertyFiles;
-import com.self.service.logging.log.LogUtil;
+import com.self.service.logging.impl.Log;
+import com.self.service.logging.log.LogFactory;
 import com.self.service.util.common.PropertyLoaderUtil;
 
 public class DataSourceHandler {
 	private final HashMap<String, DBI> DATA_SOURCE_CACHE;
 	
-	private final String CLASSNAME = this.getClass().getName(); 
+	private final Log log = LogFactory.getLogger(this.getClass().getName()); 
 	
 	private static class Singleton{
 		public static final DataSourceHandler instance = new DataSourceHandler(EnumConnectionType.DATASOURCE, null); 
@@ -50,7 +51,7 @@ public class DataSourceHandler {
 				}
 				
 			} catch (ClassNotFoundException | IllegalAccessException| IOException e) {
-				LogUtil.getInstance(CLASSNAME).error("Database properties no readable"+PropertyFiles.CACHE_PROP, e);;
+				log.error("Database properties no readable"+PropertyFiles.CACHE_PROP, e);;
 			}
 			
 		}
@@ -82,7 +83,7 @@ public class DataSourceHandler {
 			
 			
 			if(dbi == null){
-				LogUtil.getInstance(CLASSNAME).info("Connection is set improperly. Check on "+dsName);
+				log.info("Connection is set improperly. Check on "+dsName);
 				
 				System.exit(-1);		//Fail the system. Should not proceed.
 			}
@@ -94,7 +95,7 @@ public class DataSourceHandler {
 	private DBI connectViaConnectionQuery(String dsName, DBPropertyBean propBean) {
 		String jdbc_url = propBean.getConnectionURL();
 		
-		LogUtil.getInstance(CLASSNAME).info("Connected to JDBC:"+jdbc_url);
+		log.info("Connected to JDBC:"+jdbc_url);
 		
 		return new DBI(jdbc_url,propBean.getConnectionUserName(), propBean.getConnectionPassword());
 	}
@@ -112,7 +113,7 @@ public class DataSourceHandler {
 			initContext = new InitialContext(connectionSetup);
 			datasource  = (DataSource)initContext.lookup(propBean.getContextLookup());
 			
-			LogUtil.getInstance(CLASSNAME).info("Connected to data source:"+dsName);
+			log.info("Connected to data source:"+dsName);
 			
 		} catch (NamingException e) {
 			e.printStackTrace();
