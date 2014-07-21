@@ -42,4 +42,9 @@ public class MenuCache extends AbstractQuerySingleResultCache<MenuBean, MenuJDBI
 		return mb;
 	}
 
+	@Override
+	protected MenuBean cloneCopy(MenuBean toCloneValue) {
+		return toCloneValue;
+	}
+
 }

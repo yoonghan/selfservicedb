@@ -29,4 +29,9 @@ public class EnumCountryCache extends AbstractQuerySingleResultCache<EnumCountry
 	public EnumCountryBean getDefaultValueIfNull() {
 		return new EnumCountryBean();
 	}
+
+	@Override
+	protected EnumCountryBean cloneCopy(EnumCountryBean toCloneValue) {
+		return toCloneValue;
+	}
 }

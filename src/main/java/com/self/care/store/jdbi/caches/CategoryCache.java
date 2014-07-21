@@ -37,4 +37,9 @@ public class CategoryCache extends AbstractQueryMultiResultCache<String, Categor
 		return sqlConnection.findAll();
 	}
 
+	@Override
+	protected String cloneCopy(String toCloneValue) {
+		return toCloneValue;
+	}
+
 }

@@ -37,4 +37,9 @@ public class TagCache extends
 		return sqlConnectionObject.findAll();
 	}
 
+	@Override
+	protected Short cloneCopy(Short toCloneValue) {
+		return new Short(toCloneValue);
+	}
+
 }

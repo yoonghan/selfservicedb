@@ -29,4 +29,9 @@ public class EnumRatingCache extends AbstractQuerySingleResultCache<EnumRatingBe
 	public EnumRatingBean getDefaultValueIfNull() {
 		return new EnumRatingBean();
 	}
+
+	@Override
+	protected EnumRatingBean cloneCopy(EnumRatingBean toCloneValue) {
+		return toCloneValue;
+	}
 }

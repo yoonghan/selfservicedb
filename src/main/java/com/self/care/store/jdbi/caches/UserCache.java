@@ -39,4 +39,9 @@ public class UserCache extends AbstractQuerySingleResultCache<UserBean, UserJDBI
 	public UserBean getDefaultValueIfNull() {
 		return new UserBean();
 	}
+
+	@Override
+	protected UserBean cloneCopy(UserBean toCloneValue) {
+		return toCloneValue.clone();
+	}
 }

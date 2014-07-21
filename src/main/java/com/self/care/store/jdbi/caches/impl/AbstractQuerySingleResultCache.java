@@ -24,6 +24,7 @@ public abstract class AbstractQuerySingleResultCache<T, U extends BasicJDBIComma
 	private final LoadingCache<String, T> RESULT_SOURCE_CACHE;
 	private final String JDBI_NAME;
 	private final Class<U> SQL_OBJECT;
+	private final T DEFAULT_NULL_VALUE = getDefaultValueIfNull();
 	
 	private LoadingCache<String, T> initCacheLoader(int cacheSize, int timeValue, TimeUnit timeUnit){
 		return CacheBuilder.newBuilder()
@@ -81,16 +82,22 @@ public abstract class AbstractQuerySingleResultCache<T, U extends BasicJDBIComma
 		}
 		
 		if(returnValue == null){
-			returnValue = getDefaultValueIfNull();
+			return DEFAULT_NULL_VALUE;
 		}
 		
 		return returnValue;
 	}
 	
-	public T getValue(String key) throws ExecutionException{
-		return RESULT_SOURCE_CACHE.get(key);
+	public T getValue(String key, boolean cloneCopy) throws ExecutionException{
+		T result = RESULT_SOURCE_CACHE.get(key);
+
+		return cloneCopy == false? 
+				result: 
+				cloneCopy(result);
 	}
 	
+	protected abstract T cloneCopy(T toCloneValue);
+
 	public void refreshCache(){
 		RESULT_SOURCE_CACHE.invalidateAll();
 	}

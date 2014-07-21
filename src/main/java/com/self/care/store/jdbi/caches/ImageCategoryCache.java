@@ -32,4 +32,13 @@ public class ImageCategoryCache extends AbstractQuerySingleResultCache<List<Imag
 	public List<ImageBean> getDefaultValueIfNull() {
 		return new ArrayList<ImageBean>(0);
 	}
+
+	@Override
+	protected List<ImageBean> cloneCopy(List<ImageBean> toCloneValue) {
+		ArrayList<ImageBean> cloneImageList = new ArrayList<ImageBean>(toCloneValue.size());
+		for(ImageBean cloneValue: toCloneValue){
+			cloneImageList.add(cloneValue.clone());
+		}
+		return cloneImageList;
+	}
 }

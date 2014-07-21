@@ -40,7 +40,7 @@ public class ImageMapper implements ResultSetMapper<ImageBean> {
 		String enumCountryId = rs.getString("enumCountryId");
 		ib.setEnumCountryId(enumCountryId);
 		try {
-			ib.setCountry(EnumCountryCache.getInstance().getValue(enumCountryId));
+			ib.setCountry(EnumCountryCache.getInstance().getValue(enumCountryId,false));
 		} catch (ExecutionException e1) {
 			log.info("Unable to get countryId:"+enumCountryId);
 		}
@@ -48,7 +48,7 @@ public class ImageMapper implements ResultSetMapper<ImageBean> {
 		String userId = rs.getString("cUser");
 		ib.setUserId(userId);
 		try {
-			ib.setUser(UserCache.getInstance().getValue(userId));
+			ib.setUser(UserCache.getInstance().getValue(userId,false));
 		} catch (ExecutionException e) {
 			log.info("Unable to get userId:"+userId);
 		}
@@ -56,7 +56,7 @@ public class ImageMapper implements ResultSetMapper<ImageBean> {
 		Integer enumRatingId = rs.getInt("enumRatingId");
 		ib.setEnumRatingId(enumRatingId);
 		try {
-			ib.setRating(EnumRatingCache.getInstance().getValue(enumRatingId.toString()));
+			ib.setRating(EnumRatingCache.getInstance().getValue(enumRatingId.toString(),false));
 		} catch (ExecutionException e) {
 			log.info("Unable to get ratingId:"+enumRatingId);
 		}

@@ -29,4 +29,9 @@ public class ImageCache extends AbstractQuerySingleResultCache<ImageBean, ImageJ
 	public ImageBean getDefaultValueIfNull() {
 		return new ImageBean();
 	}
+
+	@Override
+	protected ImageBean cloneCopy(ImageBean toCloneValue) {
+		return toCloneValue.clone();
+	}
 }

@@ -2,7 +2,7 @@ package com.self.care.store.jdbi.entity;
 
 import java.sql.Date;
 
-public class ImageBean{
+public class ImageBean implements Cloneable{
 	private String imageId;
 	private String name;
 	private String location;
@@ -179,5 +179,33 @@ public class ImageBean{
 		this.enumRatingId = enumRatingId;
 	}
 	
-	
+	public ImageBean clone(){
+		ImageBean clonedImageBean = new ImageBean();
+		
+		clonedImageBean.setImageId(imageId);
+		clonedImageBean.setName(name);
+		clonedImageBean.setLocation(location);
+		
+		clonedImageBean.setExposure(exposure);
+		clonedImageBean.setSettings(settings);
+		clonedImageBean.setTools(tools);
+		clonedImageBean.setMetaDate(metaDate);
+		clonedImageBean.setDescription(description);
+		clonedImageBean.setcTime(cTime);
+		clonedImageBean.setcUser(cUser);
+		clonedImageBean.setmTime(mTime);
+		clonedImageBean.setURI(URI);
+		
+		clonedImageBean.setEnumStatusId(enumStatusId);
+
+		clonedImageBean.setUserId(userId);
+		clonedImageBean.setEnumCountryId(enumCountryId);
+		clonedImageBean.setEnumRatingId(enumRatingId);
+		
+		clonedImageBean.setCountry(country);
+		clonedImageBean.setRating(rating);
+		clonedImageBean.setUser(user.clone());
+		
+		return clonedImageBean;
+	}
 }

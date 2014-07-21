@@ -2,7 +2,7 @@ package com.self.care.store.jdbi.entity;
 
 import java.sql.Timestamp;
 
-public class UserBean {
+public class UserBean implements Cloneable{
 	private Long     userId;
 	private String     identity;
 	private Integer    typeMap;
@@ -162,4 +162,29 @@ public class UserBean {
 		this.status = status;
 	}
 	
+	public UserBean clone(){
+		UserBean clonedUserBean = new UserBean();
+		clonedUserBean.setUserId(userId);
+		clonedUserBean.setIdentity(identity);
+		clonedUserBean.setTypeMap(typeMap);
+		clonedUserBean.setStatus(status);
+		clonedUserBean.setEmail(email);
+		clonedUserBean.setName(name);
+		
+		clonedUserBean.setGoogleAuthId(googleAuthId);
+		clonedUserBean.setGoogleEmail(googleEmail);
+		clonedUserBean.setGoogleLink(googleLink);
+		clonedUserBean.setGooglePicture(googlePicture);
+		
+		clonedUserBean.setFacebookAuthId(facebookAuthId);
+		clonedUserBean.setFacebookEmail(facebookEmail);
+		clonedUserBean.setFacebookGender(facebookGender);
+		clonedUserBean.setFacebookLink(facebookLink);
+
+		clonedUserBean.setLastLoginTimeStamp(lastLoginTimeStamp);
+		clonedUserBean.setLastLoginTypeMap(lastLoginTypeMap);
+		clonedUserBean.setLastModifiedTimeStamp(lastModifiedTimeStamp);
+
+		return clonedUserBean;
+	}
 }

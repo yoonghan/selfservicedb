@@ -43,4 +43,9 @@ public class MenuListCache extends AbstractQuerySingleResultCache<List<MenuListB
 		return new ArrayList<MenuListBean>(0);
 	}
 
+	@Override
+	protected List<MenuListBean> cloneCopy(List<MenuListBean> toCloneValue) {
+		return toCloneValue;
+	}
+
 }

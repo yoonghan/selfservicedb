@@ -2,10 +2,9 @@ import java.util.concurrent.ExecutionException;
 
 import junit.framework.Assert;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
-import com.self.care.store.jdbi.caches.FacebookUserCache;
-import com.self.care.store.jdbi.caches.GoogleUserCache;
 import com.self.care.store.jdbi.caches.UserCache;
 import com.self.care.store.jdbi.dao.UserDAO;
 import com.self.care.store.jdbi.entity.UserBean;
@@ -44,18 +43,19 @@ public class DMLTest {
 		
 		UserDAO.getInstance().updateOrInsertUser(userBean);
 		
-		UserBean userBeanUpdated = UserCache.getInstance().getValue(""+userId);
+		UserBean userBeanUpdated = UserCache.getInstance().getValue(""+userId,false);
 		Assert.assertEquals(userBeanUpdated.getEmail(),userBean.getEmail());
 		
-		UserBean googleUpdated = GoogleUserCache.getInstance().getValue(""+userBean.getGoogleAuthId());
+		UserBean googleUpdated = UserDAO.getInstance().getUserViaGoogle(userBean.getGoogleAuthId());
 		Assert.assertEquals(googleUpdated.getGoogleAuthId(),userBean.getGoogleAuthId());
 		
-		UserBean facebookUpdated = FacebookUserCache.getInstance().getValue(""+userBean.getFacebookAuthId());
+		UserBean facebookUpdated = UserDAO.getInstance().getUserViaFacebook(userBean.getFacebookAuthId());
 		Assert.assertEquals(facebookUpdated.getFacebookAuthId(),userBean.getFacebookAuthId());
 		
 		UserDAO.getInstance().actualUserDelete(userId);
 	}
 	
+	@Ignore
 	@Test
 	public void userUpdate2(){
 		

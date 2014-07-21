@@ -28,4 +28,9 @@ public class ImageCounterCache extends AbstractQuerySingleResultCache<Integer, I
 	public Integer getDefaultValueIfNull() {
 		return new Integer(-1);
 	}
+
+	@Override
+	protected Integer cloneCopy(Integer toCloneValue) {
+		return new Integer(toCloneValue);
+	}
 }

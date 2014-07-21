@@ -37,6 +37,4 @@ public class CategoryBean{
 	public void setEnumStatusId(Short enumStatusId) {
 		this.enumStatusId = enumStatusId;
 	}
-	
-	
 }

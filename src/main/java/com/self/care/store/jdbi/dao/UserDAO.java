@@ -27,7 +27,7 @@ public class UserDAO {
 		return Singleton.instance;
 	}
 
-	public UserBean getUserViaGoogleEmail(Integer type, String userName) {
+	public UserBean getUserViaGoogle(String userId) {
 		UserBean userBean = null;
 
 		DBI dbConn;
@@ -35,7 +35,25 @@ public class UserDAO {
 			dbConn = DataSourceHandler.getInstance().getDataSource(
 					JDBISetting.IMG_CONNECTION_SERVICE);
 			UserJDBI userJDBI = dbConn.open(UserJDBI.class);
-			userBean = userJDBI.selectViaGoogleEmail(userName);
+			userBean = userJDBI.selectViaGoogleId(userId);
+			userJDBI.close();
+			
+		} catch (ExecutionException e) {
+			log.error("Unable to retrieve user info via gmail", e);
+		}
+
+		return userBean == null ? new UserBean() : userBean;
+	}
+	
+	public UserBean getUserViaFacebook(String userId) {
+		UserBean userBean = null;
+
+		DBI dbConn;
+		try {
+			dbConn = DataSourceHandler.getInstance().getDataSource(
+					JDBISetting.IMG_CONNECTION_SERVICE);
+			UserJDBI userJDBI = dbConn.open(UserJDBI.class);
+			userBean = userJDBI.selectViaFacebookId(userId);
 			userJDBI.close();
 			
 		} catch (ExecutionException e) {
@@ -54,14 +72,17 @@ public class UserDAO {
 					JDBISetting.IMG_CONNECTION_SERVICE);
 			UserJDBI userJDBI = dbConn.open(UserJDBI.class);
 			
+			String facebookId = userBean.getFacebookAuthId();
+			String googleId = userBean.getGoogleAuthId();
+			
 			userId = userJDBI.insert(
 					userBean.getIdentity(),
 					userBean.getTypeMap(), userBean.getEmail(),
 					userBean.getName(), 
 					userBean.getGoogleEmail(),userBean.getGoogleLink(),
-					userBean.getGoogleAuthId(),	userBean.getGooglePicture(),
+					googleId, userBean.getGooglePicture(),
 					userBean.getFacebookEmail(), userBean.getFacebookLink(),
-					userBean.getFacebookAuthId(), userBean.getFacebookGender(),
+					facebookId, userBean.getFacebookGender(),
 					userBean.getLastLoginTypeMap(),
 					userBean.getLastLoginTimeStamp(),
 					userBean.getLastModifiedTimeStamp());
@@ -123,8 +144,9 @@ public class UserDAO {
 				//If no records were updated, means it have to insert.
 				if(updatedRecord == 0)
 					userId = insertUser(userBean);
-				else
+				else{
 					UserCache.getInstance().refreshOnIdCache(""+userId);
+				}
 				
 				userJDBI.close();
 			} catch (ExecutionException e) {
@@ -154,9 +176,31 @@ public class UserDAO {
 			
 			userJDBI.close();
 		} catch (ExecutionException e) {
-			log.error("Error in inserting user data:", e);
+			log.error("Error in deleting user data:", e);
 		}
 		
 		return rowsDeleted;
+	}
+	
+	/**
+	 * Return number of records.
+	 */
+	public int getCount(){
+		
+		int rowCount=0;
+		
+		try {
+			DBI dbConn = DataSourceHandler.getInstance().getDataSource(
+					JDBISetting.IMG_CONNECTION_SERVICE);
+			UserJDBI userJDBI = dbConn.open(UserJDBI.class);
+			
+			rowCount = userJDBI.countUser();
+			
+			userJDBI.close();
+		} catch (ExecutionException e) {
+			log.error("Error in inserting user data:", e);
+		}
+		
+		return rowCount;
 	}
 }

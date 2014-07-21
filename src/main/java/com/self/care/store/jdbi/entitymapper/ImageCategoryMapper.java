@@ -26,7 +26,7 @@ public class ImageCategoryMapper implements ResultSetMapper<ImageBean>{
 		ImageBean ib = null;
 		
 		try {
-			ib = ImageCache.getInstance().getValue(imageId);
+			ib = ImageCache.getInstance().getValue(imageId, false);
 		} catch (ExecutionException e) {
 			log.error("Unable to get value for:"+imageId);
 		}

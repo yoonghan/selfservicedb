@@ -82,11 +82,14 @@ public interface UserJDBI extends BasicJDBICommand<UserBean>{
 	@SqlUpdate("delete from user where userId = :userId")
 	int deleteUser(@Bind("userId") Long userId);
 	
+	@SqlQuery("select count(*) from user")
+	int countUser();
+	
 	@SqlQuery("select userId,identity,typeMap,email,name,status from user where userId = :userId")
 	UserBean select(@Bind("userId") Long userId);
 	
 	@SqlQuery("select userId,identity,typeMap,email,name,googleAuthId,status from user where googleAuthId = :googleAuthId")
-	UserBean selectViaGoogleEmail(@Bind("googleAuthId") String googleAuthId);
+	UserBean selectViaGoogleId(@Bind("googleAuthId") String googleAuthId);
 	
 	@SqlQuery("select userId,identity,typeMap,email,name,facebookAuthId,status from user where facebookAuthId = :facebookAuthId")
 	UserBean selectViaFacebookId(@Bind("facebookAuthId") String facebookAuthId);
