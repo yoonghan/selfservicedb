@@ -12,7 +12,7 @@ import com.self.care.store.jdbi.entitymapper.ImageCategoryMapper;
 import com.self.care.store.jdbi.impl.BasicJDBICommand;
 
 @RegisterMapper(ImageCategoryMapper.class)
-public interface ImageCategoryJDBI extends BasicJDBICommand<List<ImageBean>>{
+public interface ImageCategoryJDBI extends BasicJDBICommand{
 	
 	@SqlUpdate("insert into image_category (imageId, categoryId) values (:imageId, :categoryId)")
 	void insert(@Bind("imageId") String imageId, @Bind("categoryId") String categoryId);

@@ -9,7 +9,7 @@ import com.self.care.store.jdbi.entitymapper.EnumCountryMapper;
 import com.self.care.store.jdbi.impl.BasicJDBICommand;
 
 @RegisterMapper(EnumCountryMapper.class)
-public interface EnumCountryJDBI extends BasicJDBICommand<EnumCountryBean>{
+public interface EnumCountryJDBI extends BasicJDBICommand{
 	
 	@SqlQuery("select enumCountryId, country, state from enum_country where enumCountryId = :enumCountryId")
 	EnumCountryBean select(@Bind("enumCountryId") String enumCountryId);

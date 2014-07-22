@@ -25,7 +25,7 @@ public class ImageTagMapper implements ResultSetMapper<ImageBean>{
 		ImageBean ib = null;
 		
 		try {
-			ib = ImageCache.getInstance().getValue(imageId,false);
+			ib = ImageCache.getInstance().getValue(imageId).clone();
 		} catch (ExecutionException e) {
 			log.error("Unable to get value for:"+imageId);
 		}

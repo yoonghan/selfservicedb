@@ -1,6 +1,6 @@
 package com.self.care.store.jdbi.entity;
 
-public class EnumRatingBean {
+public class EnumRatingBean implements Cloneable{
 	private Integer enumRatingId;
 	private Integer rating;
 	
@@ -18,5 +18,12 @@ public class EnumRatingBean {
 
 	public void setEnumRatingId(Integer enumRatingId) {
 		this.enumRatingId = enumRatingId;
+	}
+	
+	public EnumRatingBean clone(){
+		EnumRatingBean enumRatingBean = new EnumRatingBean();
+		enumRatingBean.setRating(rating);
+		enumRatingBean.setEnumRatingId(enumRatingId);
+		return enumRatingBean;
 	}
 }

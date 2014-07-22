@@ -9,7 +9,7 @@ import com.self.care.store.jdbi.entitymapper.EnumRatingMapper;
 import com.self.care.store.jdbi.impl.BasicJDBICommand;
 
 @RegisterMapper(EnumRatingMapper.class)
-public interface EnumRatingJDBI extends BasicJDBICommand<EnumRatingBean>{
+public interface EnumRatingJDBI extends BasicJDBICommand{
 	
 	@SqlQuery("select enumRatingId, rating from enum_rating where enumRatingId = :enumRatingId")
 	EnumRatingBean select(@Bind("enumRatingId") String ratingId);

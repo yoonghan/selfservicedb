@@ -1,14 +1,14 @@
 package com.self.care.store.jdbi.caches;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.self.care.store.jdbi.caches.impl.AbstractQuerySingleResultCache;
 import com.self.care.store.jdbi.entity.ImageBean;
+import com.self.care.store.jdbi.entity.immutable.ImmutableImageList;
 import com.self.care.store.jdbi.impl.JDBISetting;
 import com.self.care.store.jdbi.sql.ImageTagJDBI;
 
-public class ImageTagCache extends AbstractQuerySingleResultCache<List<ImageBean>, ImageTagJDBI> {
+public class ImageTagCache extends AbstractQuerySingleResultCache<List<ImageBean>, ImmutableImageList, ImageTagJDBI> {
 
 	static final class Singleton{
 		public static final ImageTagCache instance = new ImageTagCache();
@@ -29,17 +29,13 @@ public class ImageTagCache extends AbstractQuerySingleResultCache<List<ImageBean
 	}
 
 	@Override
-	public List<ImageBean> getDefaultValueIfNull() {
-		return new ArrayList<ImageBean>(0);
+	public ImmutableImageList getDefaultValueIfNull() {
+		return new ImmutableImageList();
 	}
 
 	@Override
-	protected List<ImageBean> cloneCopy(List<ImageBean> toCloneValue) {
-		ArrayList<ImageBean> cloneImageList = new ArrayList<ImageBean>(toCloneValue.size());
-		for(ImageBean cloneValue: toCloneValue){
-			cloneImageList.add(cloneValue.clone());
-		}
-		return cloneImageList;
+	protected ImmutableImageList getImmutableValue(List<ImageBean> returnValue) {
+		return new ImmutableImageList(returnValue);
 	}
-	
+
 }

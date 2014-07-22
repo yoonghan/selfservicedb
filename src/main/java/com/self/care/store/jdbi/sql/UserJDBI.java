@@ -13,7 +13,7 @@ import com.self.care.store.jdbi.entitymapper.UserMapper;
 import com.self.care.store.jdbi.impl.BasicJDBICommand;
 
 @RegisterMapper(UserMapper.class)
-public interface UserJDBI extends BasicJDBICommand<UserBean>{
+public interface UserJDBI extends BasicJDBICommand{
 	
 	@SqlUpdate("insert into user (identity, typeMap, email, name, status,"
 			+ "googleEmail, googleLink, googleAuthId, googlePicture, "
@@ -88,9 +88,9 @@ public interface UserJDBI extends BasicJDBICommand<UserBean>{
 	@SqlQuery("select userId,identity,typeMap,email,name,status from user where userId = :userId")
 	UserBean select(@Bind("userId") Long userId);
 	
-	@SqlQuery("select userId,identity,typeMap,email,name,googleAuthId,status from user where googleAuthId = :googleAuthId")
+	@SqlQuery("select userId,identity,typeMap,email,name,googleAuthId,googleEmail,googleLink,googlePicture,status from user where googleAuthId = :googleAuthId")
 	UserBean selectViaGoogleId(@Bind("googleAuthId") String googleAuthId);
 	
-	@SqlQuery("select userId,identity,typeMap,email,name,facebookAuthId,status from user where facebookAuthId = :facebookAuthId")
+	@SqlQuery("select userId,identity,typeMap,email,name,facebookAuthId,facebookEmail,facebookLink,facebookGender,status from user where facebookAuthId = :facebookAuthId")
 	UserBean selectViaFacebookId(@Bind("facebookAuthId") String facebookAuthId);
 }

@@ -17,8 +17,8 @@ import com.self.service.util.common.PropertyLoaderUtil;
 
 import static com.self.care.store.jdbi.impl.PropertyFiles.*;
 
-public abstract class AbstractQueryMultiResultCache<T, V, U extends BasicJDBICommand<T>> 
-		extends AbstractQuerySingleResultCache<T, U>{
+public abstract class AbstractQueryMultiResultCache<S, T extends Immutable<S>, V, U extends BasicJDBICommand> 
+		extends AbstractQuerySingleResultCache<S, T, U>{
 	
 	private final Log log = LogFactory.getLogger(this.getClass().getName());
 	

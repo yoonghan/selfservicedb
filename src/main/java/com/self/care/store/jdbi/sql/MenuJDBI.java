@@ -9,7 +9,7 @@ import com.self.care.store.jdbi.entitymapper.MenuMapper;
 import com.self.care.store.jdbi.impl.BasicJDBICommand;
 
 @RegisterMapper(MenuMapper.class)
-public interface MenuJDBI  extends BasicJDBICommand<MenuBean>{
+public interface MenuJDBI  extends BasicJDBICommand{
 
 	@SqlQuery("select menuId, toolTip, textDisplay, imageURI, linkURI, enumTypeId from menu where menuId = :menuId")
 	MenuBean select(@Bind("menuId") Integer menuId);

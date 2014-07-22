@@ -14,7 +14,7 @@ import com.self.care.store.jdbi.impl.BasicJDBICommand;
 import com.self.care.store.jdbi.impl.EnumStatus;
 
 @RegisterMapper(ImageMapper.class)
-public interface ImageJDBI extends BasicJDBICommand<ImageBean>{
+public interface ImageJDBI extends BasicJDBICommand{
 	
 	@SqlUpdate("insert into image (imageId, name, location, enumCountryId, enumRatingId, exposure, settings, tools, metaDate, description, cUser, cTime, mTime, URI)"
 			+" values (:imageId, :name, :location, :enumCountryId, :enumRatingId, :exposure, :settings, :tools, :metaDate, :description, :cUser, :cTime, :mTime, :URI)")

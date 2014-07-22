@@ -1,6 +1,6 @@
 package com.self.care.store.jdbi.entity;
 
-public class MenuBean{
+public class MenuBean implements Cloneable{
 	private Short menuId;
 	private String toolTip;
 	private String textDisplay;
@@ -54,5 +54,17 @@ public class MenuBean{
 
 	public void setEnumTypeId(Integer enumTypeId) {
 		this.enumTypeId = enumTypeId;
+	}
+	
+	public MenuBean clone(){
+		MenuBean menuBean = new MenuBean();
+		menuBean.setEnumTypeId(enumTypeId);
+		menuBean.setImageURI(imageURI);
+		menuBean.setLinkURI(linkURI);
+		menuBean.setMenuId(menuId);
+		menuBean.setTextDisplay(textDisplay);
+		menuBean.setToolTip(toolTip);
+		
+		return menuBean;
 	}
 }

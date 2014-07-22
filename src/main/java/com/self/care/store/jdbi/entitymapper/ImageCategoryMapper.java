@@ -9,6 +9,7 @@ import org.skife.jdbi.v2.tweak.ResultSetMapper;
 
 import com.self.care.store.jdbi.caches.ImageCache;
 import com.self.care.store.jdbi.entity.ImageBean;
+import com.self.care.store.jdbi.entity.immutable.ImmutableImageBean;
 import com.self.service.logging.impl.Log;
 import com.self.service.logging.log.LogFactory;
 
@@ -23,14 +24,14 @@ public class ImageCategoryMapper implements ResultSetMapper<ImageBean>{
 		
 		String imageId = rs.getString("imageId");
 		
-		ImageBean ib = null;
+		ImmutableImageBean ib = null;
 		
 		try {
-			ib = ImageCache.getInstance().getValue(imageId, false);
+			ib = ImageCache.getInstance().getValue(imageId);
 		} catch (ExecutionException e) {
 			log.error("Unable to get value for:"+imageId);
 		}
-		return ib;
+		return ib.clone();
 	}
 
 }

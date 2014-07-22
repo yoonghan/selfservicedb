@@ -11,7 +11,7 @@ import com.self.care.store.jdbi.entitymapper.MenuListMapper;
 import com.self.care.store.jdbi.impl.BasicJDBICommand;
 
 @RegisterMapper(MenuListMapper.class)
-public interface MenuListJDBI  extends BasicJDBICommand<List<MenuListBean>>{
+public interface MenuListJDBI  extends BasicJDBICommand{
 	
 	@SqlQuery("select menuId, level, levelOrder from menugroup_menu where menuGroupId = :menuGroupId"
 			+ " order by level, levelOrder")

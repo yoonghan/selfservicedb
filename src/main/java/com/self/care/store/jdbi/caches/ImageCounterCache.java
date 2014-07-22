@@ -1,10 +1,11 @@
 package com.self.care.store.jdbi.caches;
 
 import com.self.care.store.jdbi.caches.impl.AbstractQuerySingleResultCache;
+import com.self.care.store.jdbi.entity.immutable.ImmutableInteger;
 import com.self.care.store.jdbi.impl.JDBISetting;
 import com.self.care.store.jdbi.sql.ImageCounterJDBI;
 
-public class ImageCounterCache extends AbstractQuerySingleResultCache<Integer, ImageCounterJDBI>{
+public class ImageCounterCache extends AbstractQuerySingleResultCache<Integer, ImmutableInteger, ImageCounterJDBI>{
 
 	static final class Singleton{
 		public static final ImageCounterCache instance = new ImageCounterCache();
@@ -25,12 +26,12 @@ public class ImageCounterCache extends AbstractQuerySingleResultCache<Integer, I
 	}
 
 	@Override
-	public Integer getDefaultValueIfNull() {
-		return new Integer(-1);
+	public ImmutableInteger getDefaultValueIfNull() {
+		return new ImmutableInteger(-1);
 	}
 
 	@Override
-	protected Integer cloneCopy(Integer toCloneValue) {
-		return new Integer(toCloneValue);
+	protected ImmutableInteger getImmutableValue(Integer returnValue) {
+		return new ImmutableInteger(returnValue);
 	}
 }

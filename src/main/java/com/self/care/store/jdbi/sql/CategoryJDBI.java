@@ -14,7 +14,7 @@ import com.self.care.store.jdbi.impl.BasicJDBICommand;
 import com.self.care.store.jdbi.impl.EnumStatus;
 
 @RegisterMapper(CategoryMapper.class)
-public interface CategoryJDBI extends BasicJDBICommand<String>{
+public interface CategoryJDBI extends BasicJDBICommand{
 	
 	@SqlUpdate("insert into category (categoryId, name, description, ,enumStatusId, counter) values (:categoryId, :name, :description, :enumStatusId, :counter)")
 	void insert(@BindBean CategoryBean categoryBean);

@@ -2,12 +2,13 @@ package com.self.care.store.jdbi.caches;
 
 import com.self.care.store.jdbi.caches.impl.AbstractQuerySingleResultCache;
 import com.self.care.store.jdbi.entity.UserBean;
+import com.self.care.store.jdbi.entity.immutable.ImmutableUserBean;
 import com.self.care.store.jdbi.impl.JDBISetting;
 import com.self.care.store.jdbi.sql.UserJDBI;
 import com.self.service.logging.impl.Log;
 import com.self.service.logging.log.LogFactory;
 
-public class UserCache extends AbstractQuerySingleResultCache<UserBean, UserJDBI>{
+public class UserCache extends AbstractQuerySingleResultCache<UserBean, ImmutableUserBean, UserJDBI>{
 	
 	private final Log log = LogFactory.getLogger("com.self.care.store.jdbi.caches.UserCache");
 	
@@ -32,16 +33,25 @@ public class UserCache extends AbstractQuerySingleResultCache<UserBean, UserJDBI
 		}catch(Exception e){
 			log.error("Invalid key for parsing captured:"+key, e);
 		}
+		
 		return value;
 	}
 	
 	@Override
-	public UserBean getDefaultValueIfNull() {
-		return new UserBean();
+	public ImmutableUserBean getDefaultValueIfNull() {
+		return new ImmutableUserBean();
 	}
 
 	@Override
-	protected UserBean cloneCopy(UserBean toCloneValue) {
-		return toCloneValue.clone();
+	protected ImmutableUserBean getImmutableValue(UserBean returnValue) {
+		ImmutableUserBean immutableUserBean = new ImmutableUserBean(returnValue.getUserId(),
+				returnValue.getIdentity(),
+				returnValue.getTypeMap(),
+				returnValue.getStatus(),
+				returnValue.getEmail(),
+				returnValue.getName(),
+				returnValue.getGoogleAuthId(),
+				returnValue.getFacebookAuthId());
+		return immutableUserBean;
 	}
 }

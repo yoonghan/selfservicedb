@@ -1,16 +1,16 @@
 package com.self.care.store.jdbi.caches;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.self.care.store.jdbi.caches.impl.AbstractQuerySingleResultCache;
 import com.self.care.store.jdbi.entity.MenuListBean;
+import com.self.care.store.jdbi.entity.immutable.ImmutableMenuList;
 import com.self.care.store.jdbi.impl.JDBISetting;
 import com.self.care.store.jdbi.sql.MenuListJDBI;
 import com.self.service.logging.impl.Log;
 import com.self.service.logging.log.LogFactory;
 
-public class MenuListCache extends AbstractQuerySingleResultCache<List<MenuListBean>, MenuListJDBI> {
+public class MenuListCache extends AbstractQuerySingleResultCache<List<MenuListBean>, ImmutableMenuList, MenuListJDBI> {
 
 	private final Log log = LogFactory.getLogger(this.getClass().getName());
 	
@@ -39,13 +39,14 @@ public class MenuListCache extends AbstractQuerySingleResultCache<List<MenuListB
 	}
 
 	@Override
-	protected List<MenuListBean> getDefaultValueIfNull() {
-		return new ArrayList<MenuListBean>(0);
+	protected ImmutableMenuList getDefaultValueIfNull() {
+		return new ImmutableMenuList();
 	}
 
 	@Override
-	protected List<MenuListBean> cloneCopy(List<MenuListBean> toCloneValue) {
-		return toCloneValue;
+	protected ImmutableMenuList getImmutableValue(List<MenuListBean> returnValue) {
+		return new ImmutableMenuList(returnValue);
 	}
+
 
 }

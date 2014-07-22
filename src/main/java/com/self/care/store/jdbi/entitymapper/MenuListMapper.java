@@ -25,7 +25,7 @@ public class MenuListMapper implements ResultSetMapper<MenuListBean> {
 		Short menuId = rs.getShort("menuId");
 		
 		try {
-			mlb.setMenu(MenuCache.getInstance().getValue(""+menuId,false));
+			mlb.setMenu(MenuCache.getInstance().getValue(""+menuId).clone());
 		} catch (ExecutionException e) {
 			log.error("Invalid menuItem"+menuId,e);
 		}

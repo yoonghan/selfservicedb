@@ -2,12 +2,13 @@ package com.self.care.store.jdbi.caches;
 
 import com.self.care.store.jdbi.caches.impl.AbstractQuerySingleResultCache;
 import com.self.care.store.jdbi.entity.MenuBean;
+import com.self.care.store.jdbi.entity.immutable.ImmutableMenuBean;
 import com.self.care.store.jdbi.impl.JDBISetting;
 import com.self.care.store.jdbi.sql.MenuJDBI;
 import com.self.service.logging.impl.Log;
 import com.self.service.logging.log.LogFactory;
 
-public class MenuCache extends AbstractQuerySingleResultCache<MenuBean, MenuJDBI> {
+public class MenuCache extends AbstractQuerySingleResultCache<MenuBean, ImmutableMenuBean, MenuJDBI> {
 
 	private final Log log = LogFactory.getLogger(this.getClass().getName());
 	
@@ -37,14 +38,19 @@ public class MenuCache extends AbstractQuerySingleResultCache<MenuBean, MenuJDBI
 	}
 
 	@Override
-	protected MenuBean getDefaultValueIfNull() {
-		MenuBean mb = new MenuBean();
-		return mb;
+	protected ImmutableMenuBean getDefaultValueIfNull() {
+		return new ImmutableMenuBean();
 	}
 
 	@Override
-	protected MenuBean cloneCopy(MenuBean toCloneValue) {
-		return toCloneValue;
+	protected ImmutableMenuBean getImmutableValue(MenuBean returnValue) {
+		
+		return 	new ImmutableMenuBean(returnValue.getMenuId(),
+				returnValue.getToolTip(),
+				returnValue.getTextDisplay(),
+				returnValue.getImageURI(),
+				returnValue.getLinkURI(),
+				returnValue.getEnumTypeId());
 	}
 
 }

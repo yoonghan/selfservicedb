@@ -8,7 +8,7 @@ import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 
 import com.self.care.store.jdbi.impl.BasicJDBICommand;
 
-public interface TagJDBI extends BasicJDBICommand<Short>{
+public interface TagJDBI extends BasicJDBICommand{
 	
 	@SqlUpdate("insert into tag (tagId, counter) values (:tagId, :counter)")
 	void insert(@Bind("tagId") String tagId, @Bind("counter") Short counter);

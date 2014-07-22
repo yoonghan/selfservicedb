@@ -1,6 +1,6 @@
 package com.self.care.store.jdbi.entity;
 
-public class MenuListBean {
+public class MenuListBean implements Cloneable{
 	
 	private Short menuId;
 	private MenuBean menu;
@@ -39,5 +39,12 @@ public class MenuListBean {
 		this.levelOrder = levelOrder;
 	}
 	
-	
+	public MenuListBean clone(){
+		MenuListBean mlb = new MenuListBean();
+		mlb.setLevel(level);
+		mlb.setLevelOrder(levelOrder);
+		mlb.setMenu(menu);
+		mlb.setMenuId(menuId);
+		return mlb;
+	}
 }

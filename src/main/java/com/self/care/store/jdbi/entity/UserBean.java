@@ -3,7 +3,7 @@ package com.self.care.store.jdbi.entity;
 import java.sql.Timestamp;
 
 public class UserBean implements Cloneable{
-	private Long     userId;
+	private Long       userId;
 	private String     identity;
 	private Integer    typeMap;
 	private Short      status;

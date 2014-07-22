@@ -2,10 +2,11 @@ package com.self.care.store.jdbi.caches;
 
 import com.self.care.store.jdbi.caches.impl.AbstractQuerySingleResultCache;
 import com.self.care.store.jdbi.entity.EnumCountryBean;
+import com.self.care.store.jdbi.entity.immutable.ImmutableEnumCountryBean;
 import com.self.care.store.jdbi.impl.JDBISetting;
 import com.self.care.store.jdbi.sql.EnumCountryJDBI;
 
-public class EnumCountryCache extends AbstractQuerySingleResultCache<EnumCountryBean, EnumCountryJDBI> {
+public class EnumCountryCache extends AbstractQuerySingleResultCache<EnumCountryBean, ImmutableEnumCountryBean, EnumCountryJDBI> {
 
 	static final class Singleton{
 		public static final EnumCountryCache instance = new EnumCountryCache();
@@ -26,12 +27,16 @@ public class EnumCountryCache extends AbstractQuerySingleResultCache<EnumCountry
 	}
 
 	@Override
-	public EnumCountryBean getDefaultValueIfNull() {
-		return new EnumCountryBean();
+	public ImmutableEnumCountryBean getDefaultValueIfNull() {
+		return new ImmutableEnumCountryBean();
 	}
 
 	@Override
-	protected EnumCountryBean cloneCopy(EnumCountryBean toCloneValue) {
-		return toCloneValue;
+	protected ImmutableEnumCountryBean getImmutableValue(
+			EnumCountryBean returnValue) {
+		return new ImmutableEnumCountryBean(
+				returnValue.getEnumCountryId(),
+				returnValue.getCountry(),
+				returnValue.getState());
 	}
 }

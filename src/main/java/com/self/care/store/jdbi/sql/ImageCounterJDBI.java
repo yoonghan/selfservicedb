@@ -6,7 +6,7 @@ import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 
 import com.self.care.store.jdbi.impl.BasicJDBICommand;
 
-public interface ImageCounterJDBI extends BasicJDBICommand<Integer>{
+public interface ImageCounterJDBI extends BasicJDBICommand{
 	
 	@SqlUpdate("insert into image_counter (imageId, counter) values (:imageId, :counter)")
 	void insert(@Bind("imageId") String imageId, @Bind("counter") Integer counter);

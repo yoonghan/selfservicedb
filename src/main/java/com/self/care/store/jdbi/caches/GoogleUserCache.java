@@ -1,3 +1,6 @@
+/**
+ * Disable caching
+ */
 //package com.self.care.store.jdbi.caches;
 //
 //import com.self.care.store.jdbi.caches.impl.AbstractQuerySingleResultCache;

@@ -8,6 +8,7 @@ import org.junit.Test;
 import com.self.care.store.jdbi.caches.UserCache;
 import com.self.care.store.jdbi.dao.UserDAO;
 import com.self.care.store.jdbi.entity.UserBean;
+import com.self.care.store.jdbi.entity.immutable.ImmutableUserBean;
 
 
 public class DMLTest {
@@ -43,7 +44,7 @@ public class DMLTest {
 		
 		UserDAO.getInstance().updateOrInsertUser(userBean);
 		
-		UserBean userBeanUpdated = UserCache.getInstance().getValue(""+userId,false);
+		ImmutableUserBean userBeanUpdated = UserCache.getInstance().getValue(""+userId);
 		Assert.assertEquals(userBeanUpdated.getEmail(),userBean.getEmail());
 		
 		UserBean googleUpdated = UserDAO.getInstance().getUserViaGoogle(userBean.getGoogleAuthId());

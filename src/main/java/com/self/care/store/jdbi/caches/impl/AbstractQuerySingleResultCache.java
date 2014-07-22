@@ -17,7 +17,7 @@ import com.self.service.logging.impl.Log;
 import com.self.service.logging.log.LogFactory;
 import com.self.service.util.common.PropertyLoaderUtil;
 
-public abstract class AbstractQuerySingleResultCache<T, U extends BasicJDBICommand<T>> {
+public abstract class AbstractQuerySingleResultCache<S, T extends Immutable<S>, U extends BasicJDBICommand> {
 	
 	private final Log log = LogFactory.getLogger("com.self.care.store.jdbi.caches.impl.AbstractQuerySingleResultCache");
 	
@@ -63,15 +63,8 @@ public abstract class AbstractQuerySingleResultCache<T, U extends BasicJDBIComma
 		log.info("Cache Instance created.");
 	}
 	
-	/**
-	 * Override this to get value from cache.
-	 * @param key
-	 * @return
-	 */
-	protected abstract T getReturnValue(String key, U sqlConnectionObject);
-	
 	private T queryValue(String key){
-		T returnValue = null;
+		S returnValue = null;
 		try {
 			DBI dbConn = DataSourceHandler.getInstance().getDataSource(JDBI_NAME);
 			U object = dbConn.open(SQL_OBJECT);
@@ -81,22 +74,22 @@ public abstract class AbstractQuerySingleResultCache<T, U extends BasicJDBIComma
 			e.printStackTrace();
 		}
 		
+		T immutableValue = null;
+		
 		if(returnValue == null){
-			return DEFAULT_NULL_VALUE;
+			immutableValue = DEFAULT_NULL_VALUE;
+		}else{
+			immutableValue = getImmutableValue(returnValue);
 		}
 		
-		return returnValue;
+		return immutableValue;
 	}
 	
-	public T getValue(String key, boolean cloneCopy) throws ExecutionException{
+	public T getValue(String key) throws ExecutionException{
 		T result = RESULT_SOURCE_CACHE.get(key);
 
-		return cloneCopy == false? 
-				result: 
-				cloneCopy(result);
+		return result;
 	}
-	
-	protected abstract T cloneCopy(T toCloneValue);
 
 	public void refreshCache(){
 		RESULT_SOURCE_CACHE.invalidateAll();
@@ -107,5 +100,23 @@ public abstract class AbstractQuerySingleResultCache<T, U extends BasicJDBIComma
 			RESULT_SOURCE_CACHE.invalidate(id);
 	}
 
+	/**
+	 * Override this to get value from cache.
+	 * @param key
+	 * @return
+	 */
+	protected abstract S getReturnValue(String key, U sqlConnectionObject);
+	
+	/**
+	 * Override to get default null values.
+	 * @return
+	 */
 	protected abstract T getDefaultValueIfNull();
+	
+	/**
+	 * Override to turn values into immutable values.
+	 * @param returnValue
+	 * @return
+	 */
+	protected abstract T getImmutableValue(S returnValue);
 }

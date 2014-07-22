@@ -12,7 +12,7 @@ import com.self.care.store.jdbi.entitymapper.ImageTagMapper;
 import com.self.care.store.jdbi.impl.BasicJDBICommand;
 
 @RegisterMapper(ImageTagMapper.class)
-public interface ImageTagJDBI extends BasicJDBICommand<List<ImageBean>>{
+public interface ImageTagJDBI extends BasicJDBICommand{
 	
 	@SqlUpdate("insert into image_tag (imageId, tagId) values (:imageId, :tagId)")
 	void insert(@Bind("imageId") String imageId, @Bind("tagId") String tagId);

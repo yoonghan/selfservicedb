@@ -3,11 +3,11 @@ package com.self.care.store.jdbi.caches;
 import java.util.List;
 
 import com.self.care.store.jdbi.caches.impl.AbstractQueryMultiResultCache;
+import com.self.care.store.jdbi.entity.immutable.ImmutableShort;
 import com.self.care.store.jdbi.impl.JDBISetting;
 import com.self.care.store.jdbi.sql.TagJDBI;
 
-public class TagCache extends
-		AbstractQueryMultiResultCache<Short, String, TagJDBI> {
+public class TagCache extends AbstractQueryMultiResultCache<Short, ImmutableShort, String, TagJDBI> {
 
 	static final class Singleton {
 		public static final TagCache instance = new TagCache();
@@ -28,8 +28,8 @@ public class TagCache extends
 	}
 
 	@Override
-	public Short getDefaultValueIfNull() {
-		return new Short((short) -1);
+	public ImmutableShort getDefaultValueIfNull() {
+		return new ImmutableShort((short) -1);
 	}
 
 	@Override
@@ -38,8 +38,8 @@ public class TagCache extends
 	}
 
 	@Override
-	protected Short cloneCopy(Short toCloneValue) {
-		return new Short(toCloneValue);
+	protected ImmutableShort getImmutableValue(Short returnValue) {
+		return new ImmutableShort(returnValue);
 	}
 
 }

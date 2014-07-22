@@ -17,12 +17,16 @@ import com.self.care.store.jdbi.caches.MenuCache;
 import com.self.care.store.jdbi.caches.MenuListCache;
 import com.self.care.store.jdbi.caches.TagCache;
 import com.self.care.store.jdbi.caches.UserCache;
-import com.self.care.store.jdbi.entity.EnumCountryBean;
-import com.self.care.store.jdbi.entity.EnumRatingBean;
-import com.self.care.store.jdbi.entity.ImageBean;
-import com.self.care.store.jdbi.entity.MenuBean;
-import com.self.care.store.jdbi.entity.MenuListBean;
-import com.self.care.store.jdbi.entity.UserBean;
+import com.self.care.store.jdbi.entity.immutable.ImmutableEnumCountryBean;
+import com.self.care.store.jdbi.entity.immutable.ImmutableEnumRatingBean;
+import com.self.care.store.jdbi.entity.immutable.ImmutableImageBean;
+import com.self.care.store.jdbi.entity.immutable.ImmutableImageList;
+import com.self.care.store.jdbi.entity.immutable.ImmutableInteger;
+import com.self.care.store.jdbi.entity.immutable.ImmutableMenuBean;
+import com.self.care.store.jdbi.entity.immutable.ImmutableMenuList;
+import com.self.care.store.jdbi.entity.immutable.ImmutableShort;
+import com.self.care.store.jdbi.entity.immutable.ImmutableString;
+import com.self.care.store.jdbi.entity.immutable.ImmutableUserBean;
 
 public class DatabaseTest{
 	
@@ -32,11 +36,11 @@ public class DatabaseTest{
 	public static void main(String[] args){
 		try {
 			System.out.println("***START---");
-			EnumCountryBean value = EnumCountryCache.getInstance().getValue("2",false);
+			ImmutableEnumCountryBean value = EnumCountryCache.getInstance().getValue("2");
 			System.out.println("country:"+value.getCountry() + ", state:"+value.getState());
-			value = EnumCountryCache.getInstance().getValue("1",false);
+			value = EnumCountryCache.getInstance().getValue("1");
 			System.out.println("country:"+value.getCountry() + ", state:"+value.getState());
-			value = EnumCountryCache.getInstance().getValue("2",false);
+			value = EnumCountryCache.getInstance().getValue("2");
 			System.out.println("country:"+value.getCountry() + ", state:"+value.getState());
 			System.out.println("***END---");
 		} catch (ExecutionException e) {
@@ -53,44 +57,44 @@ public class DatabaseTest{
 		final String DEFAULT_KEY_VALUE="-1";
 		
 		try {
-			EnumCountryBean ecb = EnumCountryCache.getInstance().getValue(DEFAULT_KEY_VALUE,false);
+			ImmutableEnumCountryBean ecb = EnumCountryCache.getInstance().getValue(DEFAULT_KEY_VALUE);
 			Assert.assertEquals(TEST_STRING_VALUE, ecb.getCountry());
 			
-			EnumRatingBean erb = EnumRatingCache.getInstance().getValue(DEFAULT_KEY_VALUE,false);
+			ImmutableEnumRatingBean erb = EnumRatingCache.getInstance().getValue(DEFAULT_KEY_VALUE);
 			Assert.assertEquals(TEST_INT_VALUE, erb.getRating());
 			
-			String cat = CategoryCache.getInstance().getValue(DEFAULT_KEY_VALUE,false);
-			Assert.assertEquals("", cat);
+			ImmutableString cat = CategoryCache.getInstance().getValue(DEFAULT_KEY_VALUE);
+			Assert.assertEquals("", cat.getString());
 			
-			Short tag = TagCache.getInstance().getValue(DEFAULT_KEY_VALUE,false);
-			Assert.assertEquals(TEST_SHORT_VALUE, tag);
+			ImmutableShort tag = TagCache.getInstance().getValue(DEFAULT_KEY_VALUE);
+			Assert.assertEquals(TEST_SHORT_VALUE, tag.getShort());
 			
-			UserBean ub = UserCache.getInstance().getValue(DEFAULT_KEY_VALUE,false);
+			ImmutableUserBean ub = UserCache.getInstance().getValue(DEFAULT_KEY_VALUE);
 			Assert.assertEquals(TEST_STRING_VALUE, ub.getIdentity());
 			
-			ImageBean ib = ImageCache.getInstance().getValue(DEFAULT_KEY_VALUE,false);
+			ImmutableImageBean ib = ImageCache.getInstance().getValue(DEFAULT_KEY_VALUE);
 			Assert.assertEquals(TEST_STRING_VALUE, ib.getName());
 			
-			List<ImageBean> lib = ImageCategoryCache.getInstance().getValue(DEFAULT_KEY_VALUE,false);
-			Assert.assertEquals(1, lib.size());
-			if(lib.size()==1)
-				Assert.assertEquals(TEST_STRING_VALUE, lib.get(0).getName());
+			ImmutableImageList lib = ImageCategoryCache.getInstance().getValue(DEFAULT_KEY_VALUE);
+			Assert.assertEquals(1, lib.getArrayObject().size());
+			if(lib.getArrayObject().size()==1)
+				Assert.assertEquals(TEST_STRING_VALUE, lib.getArrayObject().get(0).getName());
 			
-			Integer it = ImageCounterCache.getInstance().getValue(DEFAULT_KEY_VALUE,false);
-			Assert.assertEquals(TEST_INT_VALUE, it);
+			ImmutableInteger it = ImageCounterCache.getInstance().getValue(DEFAULT_KEY_VALUE);
+			Assert.assertEquals(TEST_INT_VALUE, it.getInteger());
 			
-			List<ImageBean> lib2 =ImageTagCache.getInstance().getValue(DEFAULT_KEY_VALUE,false);
-			Assert.assertEquals(1, lib2.size());
-			if(lib2.size()==1)
-				Assert.assertEquals(TEST_STRING_VALUE, lib.get(0).getName());
+			ImmutableImageList lib2 =ImageTagCache.getInstance().getValue(DEFAULT_KEY_VALUE);
+			Assert.assertEquals(1, lib2.getArrayObject().size());
+			if(lib2.getArrayObject().size()==1)
+				Assert.assertEquals(TEST_STRING_VALUE, lib.getArrayObject().get(0).getName());
 			
-			MenuBean menu = MenuCache.getInstance().getValue(DEFAULT_KEY_VALUE,false);
+			ImmutableMenuBean menu = MenuCache.getInstance().getValue(DEFAULT_KEY_VALUE);
 			Assert.assertEquals(TEST_STRING_VALUE, menu.getTextDisplay());
 			
-			List<MenuListBean> menuList = MenuListCache.getInstance().getValue(DEFAULT_KEY_VALUE,false);
-			Assert.assertEquals(1, menuList.size());
-			if(menuList.size()==1)
-				Assert.assertEquals(TEST_STRING_VALUE, menuList.get(0).getMenu().getTextDisplay());
+			ImmutableMenuList menuList = MenuListCache.getInstance().getValue(DEFAULT_KEY_VALUE);
+			Assert.assertEquals(1, menuList.getArrayObject().size());
+			if(menuList.getArrayObject().size()==1)
+				Assert.assertEquals(TEST_STRING_VALUE, menuList.getArrayObject().get(0).getMenu().getTextDisplay());
 			
 		} catch (ExecutionException e) {
 			e.printStackTrace();
@@ -118,26 +122,26 @@ public class DatabaseTest{
 	public void testInvalidateCache(){
 		try {
 			
-			UserBean userBean = UserCache.getInstance().getValue("-2", false);
+			ImmutableUserBean userBean = UserCache.getInstance().getValue("-2");
 			Assert.assertTrue(userBean != null);
 			
-			MenuBean mbean = MenuCache.getInstance().getValue("-1",false);
+			ImmutableMenuBean mbean = MenuCache.getInstance().getValue("-1");
 			MenuCache.getInstance().refreshCache();
-			MenuBean mbean2 = MenuCache.getInstance().getValue("-1",false);
+			ImmutableMenuBean mbean2 = MenuCache.getInstance().getValue("-1");
 			Assert.assertFalse(mbean==mbean2);
 			
-			List<MenuListBean> mbean3 = MenuListCache.getInstance().getValue("-1",false);
+			ImmutableMenuList mbean3 = MenuListCache.getInstance().getValue("-1");
 			MenuListCache.getInstance().refreshCache();
-			List<MenuListBean> mbean4 = MenuListCache.getInstance().getValue("-1",false);
+			ImmutableMenuList mbean4 = MenuListCache.getInstance().getValue("-1");
 			Assert.assertFalse(mbean3==mbean4);
 			
 			
-			mbean = MenuCache.getInstance().getValue("-1",false);
-			mbean2 = MenuCache.getInstance().getValue("-1",false);
+			mbean = MenuCache.getInstance().getValue("-1");
+			mbean2 = MenuCache.getInstance().getValue("-1");
 			Assert.assertTrue(mbean==mbean2);
 			
-			mbean3 = MenuListCache.getInstance().getValue("-1",false);
-			mbean4 = MenuListCache.getInstance().getValue("-1",false);
+			mbean3 = MenuListCache.getInstance().getValue("-1");
+			mbean4 = MenuListCache.getInstance().getValue("-1");
 			Assert.assertTrue(mbean3==mbean4);
 			
 		} catch (ExecutionException e) {
