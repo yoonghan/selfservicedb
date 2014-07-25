@@ -4,10 +4,11 @@ import java.util.List;
 
 import com.jaring.jom.store.jdbi.caches.impl.AbstractQueryMultiResultCache;
 import com.jaring.jom.store.jdbi.entity.immutable.ImmutableShort;
+import com.jaring.jom.store.jdbi.entity.immutable.ImmutableString;
 import com.jaring.jom.store.jdbi.impl.JDBISetting;
 import com.jaring.jom.store.jdbi.sql.TagJDBI;
 
-public class TagCache extends AbstractQueryMultiResultCache<Short, ImmutableShort, String, TagJDBI> {
+public class TagCache extends AbstractQueryMultiResultCache<Short, ImmutableShort, ImmutableString, TagJDBI> {
 
 	TagCache() {
 		super(JDBISetting.IMG_CONNECTION_SERVICE, TagJDBI.class, "tag");

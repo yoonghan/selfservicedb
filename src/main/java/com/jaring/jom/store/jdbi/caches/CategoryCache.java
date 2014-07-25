@@ -4,12 +4,13 @@ import java.util.List;
 
 import com.jaring.jom.store.jdbi.caches.impl.AbstractQueryMultiResultCache;
 import com.jaring.jom.store.jdbi.entity.CategoryBean;
+import com.jaring.jom.store.jdbi.entity.immutable.ImmutableCategoryBean;
 import com.jaring.jom.store.jdbi.entity.immutable.ImmutableString;
 import com.jaring.jom.store.jdbi.impl.JDBISetting;
 import com.jaring.jom.store.jdbi.sql.CategoryJDBI;
 
 
-public class CategoryCache extends AbstractQueryMultiResultCache<String, ImmutableString, CategoryBean, CategoryJDBI> {
+public class CategoryCache extends AbstractQueryMultiResultCache<String, ImmutableString, ImmutableCategoryBean, CategoryJDBI> {
 	
 	CategoryCache() {
 		super(JDBISetting.IMG_CONNECTION_SERVICE, CategoryJDBI.class, "category");

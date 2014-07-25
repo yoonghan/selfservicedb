@@ -33,6 +33,7 @@ public class ImmutableEnumCountryBean implements Immutable<EnumCountryBean> {
 	public String getState() {
 		return this.state;
 	}
+	
 	public EnumCountryBean clone(){
 		EnumCountryBean enumCountryBean = new EnumCountryBean();
 		enumCountryBean.setCountry(country);

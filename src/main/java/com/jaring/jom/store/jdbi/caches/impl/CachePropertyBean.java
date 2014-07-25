@@ -14,9 +14,11 @@ class CachePropertyBean implements PropertyMapperImpl {
 	private final Log log = LogFactory.getLogger("com.self.care.store.jdbi.caches.impl.CachePropertyBean");
 	
 	private final String CACHE_NAME;
+	private final int  MILISECONDS  = 1000;
 
 	private int timeValue = JDBISetting.TIME_DEFAULT_VALUE;
 	private TimeUnit timeUnit = JDBISetting.TIME_DEFAULT_UNIT;
+	private int worldWaitingInSecondsValue = JDBISetting.WORLD_WAITING_IN_SECONDS_VALUE * MILISECONDS;
 	
 	public CachePropertyBean(String cacheName){
 		CACHE_NAME=cacheName;
@@ -25,15 +27,31 @@ class CachePropertyBean implements PropertyMapperImpl {
 	public void map(Properties property) throws IllegalAccessException {
 		String timeUnit = property.getProperty(CACHE_NAME + PropertyFiles.TIME_UNIT_KEY);
 		String timeValue = property.getProperty(CACHE_NAME + PropertyFiles.TIME_VALUE_KEY);
-		try{
-			int time=Integer.parseInt(timeValue, 10);
-			setTimeValue(time);
-		}catch(Exception e){
-			log.warn("Reset "+CACHE_NAME+", Invalid time setting:"+timeValue);
+		String worldWaitingInSecondsValue = property.getProperty(CACHE_NAME + PropertyFiles.WORLD_WAITING_IN_SECONDS_VALUE);
+		
+		if(timeValue != null){
+			try{
+				int time=Integer.parseInt(timeValue, 10);
+				setTimeValue(time);
+			}catch(Exception e){
+				log.warn("Reset "+CACHE_NAME+", Invalid time setting:"+timeValue);
+			}
+		}
+		
+		if(worldWaitingInSecondsValue != null){
+			try{
+				int time=Integer.parseInt(worldWaitingInSecondsValue, 10) * 1000;
+				setWorldWaitingInSecondsValue(time);
+			}catch(Exception e){
+				log.warn("Reset "+CACHE_NAME+", Invalid world waiting setting:"+worldWaitingInSecondsValue);
+			}
 		}
 		
 		if(timeUnit != null){
 			switch(timeUnit){
+			case "0":	//specially made for testing.
+				setTimeUnit(TimeUnit.SECONDS);
+				break;
 			case "1":
 				setTimeUnit(TimeUnit.MINUTES);
 				break;
@@ -59,6 +77,14 @@ class CachePropertyBean implements PropertyMapperImpl {
 
 	public void setTimeValue(int timeValue) {
 		this.timeValue = timeValue;
+	}
+	
+	public int getWorldWaitingInSecondsValue() {
+		return worldWaitingInSecondsValue;
+	}
+
+	public void setWorldWaitingInSecondsValue(int worldWaitingInSecondsValue) {
+		this.worldWaitingInSecondsValue = worldWaitingInSecondsValue;
 	}
 
 	public TimeUnit getTimeUnit() {

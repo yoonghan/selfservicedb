@@ -8,6 +8,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import com.jaring.jom.store.jdbi.caches.DBCache;
+import com.jaring.jom.store.jdbi.entity.immutable.ImmutableCategoryBean;
 import com.jaring.jom.store.jdbi.entity.immutable.ImmutableEnumCountryBean;
 import com.jaring.jom.store.jdbi.entity.immutable.ImmutableEnumRatingBean;
 import com.jaring.jom.store.jdbi.entity.immutable.ImmutableImageBean;
@@ -103,8 +104,11 @@ public class DatabaseQueryTest{
 		DBCache.INSTANCE.getCategory().getAll();
 		Assert.assertTrue(true);
 		
-		List<String> tags = DBCache.INSTANCE.getTag().getAll();
+		List<ImmutableString> tags = DBCache.INSTANCE.getTag().getAll();
 		Assert.assertTrue(tags.size() >= 1);
+		
+		List<ImmutableCategoryBean> categories = DBCache.INSTANCE.getCategory().getAll();
+		Assert.assertTrue(categories.size() >= 1);
 	}
 	
 	/**
@@ -151,6 +155,5 @@ public class DatabaseQueryTest{
 			e.printStackTrace();
 		}
 		
-	}
-	
+	}	
 }
