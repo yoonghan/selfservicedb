@@ -17,7 +17,7 @@ import com.jaring.jom.store.jdbi.entity.immutable.ImmutableString;
  * 2) Records must never return null, only if there is database error; null will be returned.
  * @author yoong.han
  */
-public class ConcurrentUsers {
+public class ConcurrentUsersTest {
 	private final double THINKTIME=1000;
 	private final int USER_COUNT=10;
 	private boolean stop = false;

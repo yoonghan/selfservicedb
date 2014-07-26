@@ -4,11 +4,12 @@ import java.util.List;
 
 import com.jaring.jom.store.jdbi.caches.impl.AbstractQuerySingleResultCache;
 import com.jaring.jom.store.jdbi.entity.ImageBean;
-import com.jaring.jom.store.jdbi.entity.immutable.ImmutableImageList;
+import com.jaring.jom.store.jdbi.entity.immutable.ImmutableCustomList;
+import com.jaring.jom.store.jdbi.entity.immutable.ImmutableImageBean;
 import com.jaring.jom.store.jdbi.impl.JDBISetting;
 import com.jaring.jom.store.jdbi.sql.ImageTagJDBI;
 
-public class ImageTagCache extends AbstractQuerySingleResultCache<List<ImageBean>, ImmutableImageList, ImageTagJDBI> {
+public class ImageTagCache extends AbstractQuerySingleResultCache<ImmutableCustomList<ImmutableImageBean>, ImageTagJDBI> {
 	
 	ImageTagCache() {
 		super(JDBISetting.IMG_CONNECTION_SERVICE, ImageTagJDBI.class,"imagetag");
@@ -21,13 +22,8 @@ public class ImageTagCache extends AbstractQuerySingleResultCache<List<ImageBean
 	}
 
 	@Override
-	public ImmutableImageList getDefaultValueIfNull() {
-		return new ImmutableImageList();
-	}
-
-	@Override
-	protected ImmutableImageList getImmutableValue(List<ImageBean> returnValue) {
-		return new ImmutableImageList(returnValue);
+	public ImmutableCustomList<ImmutableImageBean> getDefaultValueIfNull() {
+		return new ImmutableCustomList<ImmutableImageBean>();
 	}
 
 }

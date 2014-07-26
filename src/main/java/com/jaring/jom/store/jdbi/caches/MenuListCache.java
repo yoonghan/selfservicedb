@@ -6,11 +6,12 @@ import com.jaring.jom.logging.impl.Log;
 import com.jaring.jom.logging.log.LogFactory;
 import com.jaring.jom.store.jdbi.caches.impl.AbstractQuerySingleResultCache;
 import com.jaring.jom.store.jdbi.entity.MenuListBean;
-import com.jaring.jom.store.jdbi.entity.immutable.ImmutableMenuList;
+import com.jaring.jom.store.jdbi.entity.immutable.ImmutableCustomList;
+import com.jaring.jom.store.jdbi.entity.immutable.ImmutableMenuListBean;
 import com.jaring.jom.store.jdbi.impl.JDBISetting;
 import com.jaring.jom.store.jdbi.sql.MenuListJDBI;
 
-public class MenuListCache extends AbstractQuerySingleResultCache<List<MenuListBean>, ImmutableMenuList, MenuListJDBI> {
+public class MenuListCache extends AbstractQuerySingleResultCache<ImmutableCustomList<ImmutableMenuListBean>, MenuListJDBI> {
 
 	private final Log log = LogFactory.getLogger(this.getClass().getName());
 		
@@ -31,14 +32,8 @@ public class MenuListCache extends AbstractQuerySingleResultCache<List<MenuListB
 	}
 
 	@Override
-	protected ImmutableMenuList getDefaultValueIfNull() {
-		return new ImmutableMenuList();
+	protected ImmutableCustomList<ImmutableMenuListBean> getDefaultValueIfNull() {
+		return new ImmutableCustomList<ImmutableMenuListBean>();
 	}
-
-	@Override
-	protected ImmutableMenuList getImmutableValue(List<MenuListBean> returnValue) {
-		return new ImmutableMenuList(returnValue);
-	}
-
 
 }

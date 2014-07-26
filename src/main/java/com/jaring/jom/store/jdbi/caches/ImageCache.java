@@ -6,7 +6,7 @@ import com.jaring.jom.store.jdbi.entity.immutable.ImmutableImageBean;
 import com.jaring.jom.store.jdbi.impl.JDBISetting;
 import com.jaring.jom.store.jdbi.sql.ImageJDBI;
 
-public class ImageCache extends AbstractQuerySingleResultCache<ImageBean, ImmutableImageBean, ImageJDBI> {
+public class ImageCache extends AbstractQuerySingleResultCache<ImmutableImageBean, ImageJDBI> {
 
 	ImageCache() {
 		super(JDBISetting.IMG_CONNECTION_SERVICE, ImageJDBI.class,"image");
@@ -23,18 +23,4 @@ public class ImageCache extends AbstractQuerySingleResultCache<ImageBean, Immuta
 		return new ImmutableImageBean();
 	}
 
-	@Override
-	protected ImmutableImageBean getImmutableValue(ImageBean returnValue) {
-		return new ImmutableImageBean(
-				returnValue.getImageId(),
-				returnValue.getName(),
-				returnValue.getLocation(),
-				returnValue.getExposure(),
-				returnValue.getSettings(),
-				returnValue.getTools(),
-				returnValue.getMetaDate(),
-				returnValue.getDescription(),
-				returnValue.getURI()
-				);
-	}
 }

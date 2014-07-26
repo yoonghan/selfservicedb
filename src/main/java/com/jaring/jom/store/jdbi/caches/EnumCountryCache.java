@@ -6,7 +6,7 @@ import com.jaring.jom.store.jdbi.entity.immutable.ImmutableEnumCountryBean;
 import com.jaring.jom.store.jdbi.impl.JDBISetting;
 import com.jaring.jom.store.jdbi.sql.EnumCountryJDBI;
 
-public class EnumCountryCache extends AbstractQuerySingleResultCache<EnumCountryBean, ImmutableEnumCountryBean, EnumCountryJDBI> {
+public class EnumCountryCache extends AbstractQuerySingleResultCache<ImmutableEnumCountryBean, EnumCountryJDBI> {
 
 	EnumCountryCache() {
 		super(JDBISetting.IMG_CONNECTION_SERVICE, EnumCountryJDBI.class, "enumcountry");
@@ -23,12 +23,4 @@ public class EnumCountryCache extends AbstractQuerySingleResultCache<EnumCountry
 		return new ImmutableEnumCountryBean();
 	}
 
-	@Override
-	protected ImmutableEnumCountryBean getImmutableValue(
-			EnumCountryBean returnValue) {
-		return new ImmutableEnumCountryBean(
-				returnValue.getEnumCountryId(),
-				returnValue.getCountry(),
-				returnValue.getState());
-	}
 }

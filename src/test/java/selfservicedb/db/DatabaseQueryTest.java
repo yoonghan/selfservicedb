@@ -9,13 +9,13 @@ import org.junit.Test;
 
 import com.jaring.jom.store.jdbi.caches.DBCache;
 import com.jaring.jom.store.jdbi.entity.immutable.ImmutableCategoryBean;
+import com.jaring.jom.store.jdbi.entity.immutable.ImmutableCustomList;
 import com.jaring.jom.store.jdbi.entity.immutable.ImmutableEnumCountryBean;
 import com.jaring.jom.store.jdbi.entity.immutable.ImmutableEnumRatingBean;
 import com.jaring.jom.store.jdbi.entity.immutable.ImmutableImageBean;
-import com.jaring.jom.store.jdbi.entity.immutable.ImmutableImageList;
 import com.jaring.jom.store.jdbi.entity.immutable.ImmutableInteger;
 import com.jaring.jom.store.jdbi.entity.immutable.ImmutableMenuBean;
-import com.jaring.jom.store.jdbi.entity.immutable.ImmutableMenuList;
+import com.jaring.jom.store.jdbi.entity.immutable.ImmutableMenuListBean;
 import com.jaring.jom.store.jdbi.entity.immutable.ImmutableShort;
 import com.jaring.jom.store.jdbi.entity.immutable.ImmutableString;
 import com.jaring.jom.store.jdbi.entity.immutable.ImmutableUserBean;
@@ -70,26 +70,28 @@ public class DatabaseQueryTest{
 			ImmutableImageBean ib = DBCache.INSTANCE.getImage().getValue(DEFAULT_KEY_VALUE);
 			Assert.assertEquals(TEST_STRING_VALUE, ib.getName());
 			
-			ImmutableImageList lib = DBCache.INSTANCE.getImageCategory().getValue(DEFAULT_KEY_VALUE);
-			Assert.assertEquals(1, lib.getArrayObject().size());
-			if(lib.getArrayObject().size()==1)
-				Assert.assertEquals(TEST_STRING_VALUE, lib.getArrayObject().get(0).getName());
+			ImmutableCustomList<ImmutableImageBean> lib = DBCache.INSTANCE.getImageCategory().getValue(DEFAULT_KEY_VALUE);
+			Assert.assertEquals(1, lib.getList().size());
+			if(lib.getList().size()==1)
+				Assert.assertEquals(TEST_STRING_VALUE, lib.getList().get(0).getName());
 			
 			ImmutableInteger it = DBCache.INSTANCE.getImageCounter().getValue(DEFAULT_KEY_VALUE);
 			Assert.assertEquals(TEST_INT_VALUE, it.getInteger());
 			
-			ImmutableImageList lib2 = DBCache.INSTANCE.getImageTag().getValue(DEFAULT_KEY_VALUE);
-			Assert.assertEquals(1, lib2.getArrayObject().size());
-			if(lib2.getArrayObject().size()==1)
-				Assert.assertEquals(TEST_STRING_VALUE, lib.getArrayObject().get(0).getName());
+			ImmutableCustomList<ImmutableImageBean> lib2 = DBCache.INSTANCE.getImageTag().getValue(DEFAULT_KEY_VALUE);
+			Assert.assertEquals(1, lib2.getList().size());
+			if(lib2.getList().size()==1){
+				Assert.assertEquals(TEST_STRING_VALUE, lib2.getList().get(0).getName());
+			}
+			
 			
 			ImmutableMenuBean menu = DBCache.INSTANCE.getMenu().getValue(DEFAULT_KEY_VALUE);
 			Assert.assertEquals(TEST_STRING_VALUE, menu.getTextDisplay());
 			
-			ImmutableMenuList menuList = DBCache.INSTANCE.getMenuList().getValue(DEFAULT_KEY_VALUE);
-			Assert.assertEquals(1, menuList.getArrayObject().size());
-			if(menuList.getArrayObject().size()==1)
-				Assert.assertEquals(TEST_STRING_VALUE, menuList.getArrayObject().get(0).getMenu().getTextDisplay());
+			ImmutableCustomList<ImmutableMenuListBean> menuList = DBCache.INSTANCE.getMenuList().getValue(DEFAULT_KEY_VALUE);
+			Assert.assertEquals(1, menuList.getList().size());
+			if(menuList.getList().size()==1)
+				Assert.assertEquals(TEST_STRING_VALUE, menuList.getList().get(0).getMenu().getTextDisplay());
 			
 		} catch (ExecutionException e) {
 			e.printStackTrace();
@@ -108,7 +110,7 @@ public class DatabaseQueryTest{
 		Assert.assertTrue(tags.size() >= 1);
 		
 		List<ImmutableCategoryBean> categories = DBCache.INSTANCE.getCategory().getAll();
-		Assert.assertTrue(categories.size() >= 1);
+		Assert.assertTrue(categories.size() == 0);
 	}
 	
 	/**
@@ -137,9 +139,9 @@ public class DatabaseQueryTest{
 			ImmutableMenuBean mbean2 = DBCache.INSTANCE.getMenu().getValue("-1");
 			Assert.assertFalse(mbean==mbean2);
 			
-			ImmutableMenuList mbean3 = DBCache.INSTANCE.getMenuList().getValue("-1");
+			ImmutableCustomList<ImmutableMenuListBean> mbean3 = DBCache.INSTANCE.getMenuList().getValue("-1");
 			DBCache.INSTANCE.getMenuList().refreshCache();
-			ImmutableMenuList mbean4 = DBCache.INSTANCE.getMenuList().getValue("-1");
+			ImmutableCustomList<ImmutableMenuListBean> mbean4 = DBCache.INSTANCE.getMenuList().getValue("-1");
 			Assert.assertFalse(mbean3==mbean4);
 			
 			

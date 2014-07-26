@@ -4,11 +4,12 @@ import java.util.List;
 
 import com.jaring.jom.store.jdbi.caches.impl.AbstractQuerySingleResultCache;
 import com.jaring.jom.store.jdbi.entity.ImageBean;
-import com.jaring.jom.store.jdbi.entity.immutable.ImmutableImageList;
+import com.jaring.jom.store.jdbi.entity.immutable.ImmutableCustomList;
+import com.jaring.jom.store.jdbi.entity.immutable.ImmutableImageBean;
 import com.jaring.jom.store.jdbi.impl.JDBISetting;
 import com.jaring.jom.store.jdbi.sql.ImageCategoryJDBI;
 
-public class ImageCategoryCache extends AbstractQuerySingleResultCache<List<ImageBean>, ImmutableImageList, ImageCategoryJDBI> {
+public class ImageCategoryCache extends AbstractQuerySingleResultCache<ImmutableCustomList<ImmutableImageBean>, ImageCategoryJDBI> {
 
 	ImageCategoryCache() {
 		super(JDBISetting.IMG_CONNECTION_SERVICE, ImageCategoryJDBI.class,"imagecategory");
@@ -21,13 +22,8 @@ public class ImageCategoryCache extends AbstractQuerySingleResultCache<List<Imag
 	}
 
 	@Override
-	public ImmutableImageList getDefaultValueIfNull() {
-		return new ImmutableImageList();
-	}
-
-	@Override
-	protected ImmutableImageList getImmutableValue(List<ImageBean> returnValue) {
-		return new ImmutableImageList(returnValue);
+	public ImmutableCustomList<ImmutableImageBean> getDefaultValueIfNull() {
+		return new ImmutableCustomList<ImmutableImageBean>();
 	}
 
 }

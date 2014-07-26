@@ -8,7 +8,7 @@ import com.jaring.jom.store.jdbi.entity.immutable.ImmutableUserBean;
 import com.jaring.jom.store.jdbi.impl.JDBISetting;
 import com.jaring.jom.store.jdbi.sql.UserJDBI;
 
-public class UserCache extends AbstractQuerySingleResultCache<UserBean, ImmutableUserBean, UserJDBI>{
+public class UserCache extends AbstractQuerySingleResultCache<ImmutableUserBean, UserJDBI>{
 	
 	private final Log log = LogFactory.getLogger("com.self.care.store.jdbi.caches.UserCache");
 	
@@ -34,16 +34,4 @@ public class UserCache extends AbstractQuerySingleResultCache<UserBean, Immutabl
 		return new ImmutableUserBean();
 	}
 
-	@Override
-	protected ImmutableUserBean getImmutableValue(UserBean returnValue) {
-		ImmutableUserBean immutableUserBean = new ImmutableUserBean(returnValue.getUserId(),
-				returnValue.getIdentity(),
-				returnValue.getTypeMap(),
-				returnValue.getStatus(),
-				returnValue.getEmail(),
-				returnValue.getName(),
-				returnValue.getGoogleAuthId(),
-				returnValue.getFacebookAuthId());
-		return immutableUserBean;
-	}
 }

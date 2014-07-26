@@ -1,6 +1,8 @@
 package com.jaring.jom.store.jdbi.caches.impl;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -9,15 +11,20 @@ import org.skife.jdbi.v2.DBI;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.ImmutableList;
 import com.jaring.jom.logging.impl.Log;
 import com.jaring.jom.logging.log.LogFactory;
+import com.jaring.jom.store.jdbi.entity.immutable.ImmutableCustomList;
+import com.jaring.jom.store.jdbi.entity.immutable.ImmutableInteger;
+import com.jaring.jom.store.jdbi.entity.immutable.ImmutableShort;
+import com.jaring.jom.store.jdbi.entity.immutable.ImmutableString;
 import com.jaring.jom.store.jdbi.impl.BasicJDBICommand;
 import com.jaring.jom.store.jdbi.impl.JDBISetting;
 import com.jaring.jom.store.jdbi.impl.PropertyFiles;
 import com.jaring.jom.store.jdbi.util.DataSourceHandler;
 import com.jaring.jom.util.common.PropertyLoaderUtil;
 
-public abstract class AbstractQuerySingleResultCache<S, T extends Immutable<S>, U extends BasicJDBICommand> {
+public abstract class AbstractQuerySingleResultCache<T extends Immutable<?>, U extends BasicJDBICommand> {
 	
 	private final Log log = LogFactory.getLogger("com.self.care.store.jdbi.caches.impl.AbstractQuerySingleResultCache");
 	
@@ -63,8 +70,9 @@ public abstract class AbstractQuerySingleResultCache<S, T extends Immutable<S>, 
 		log.info("Cache Instance created.");
 	}
 	
+	@SuppressWarnings("unchecked")
 	private T queryValue(String key){
-		S returnValue = null;
+		Object returnValue = null;
 		try {
 			DBI dbConn = DataSourceHandler.getInstance().getDataSource(JDBI_NAME);
 			U object = dbConn.open(SQL_OBJECT);
@@ -79,7 +87,7 @@ public abstract class AbstractQuerySingleResultCache<S, T extends Immutable<S>, 
 		if(returnValue == null){
 			immutableValue = DEFAULT_NULL_VALUE;
 		}else{
-			immutableValue = getImmutableValue(returnValue);
+			immutableValue = (T)convertValueToImmutable(returnValue);
 		}
 		
 		return immutableValue;
@@ -87,7 +95,6 @@ public abstract class AbstractQuerySingleResultCache<S, T extends Immutable<S>, 
 	
 	public T getValue(String key) throws ExecutionException{
 		T result = RESULT_SOURCE_CACHE.get(key);
-
 		return result;
 	}
 
@@ -105,7 +112,7 @@ public abstract class AbstractQuerySingleResultCache<S, T extends Immutable<S>, 
 	 * @param key
 	 * @return
 	 */
-	protected abstract S getReturnValue(String key, U sqlConnectionObject);
+	protected abstract Object getReturnValue(String key, U sqlConnectionObject);
 	
 	/**
 	 * Override to get default null values.
@@ -113,10 +120,41 @@ public abstract class AbstractQuerySingleResultCache<S, T extends Immutable<S>, 
 	 */
 	protected abstract T getDefaultValueIfNull();
 	
-	/**
-	 * Override to turn values into immutable values.
-	 * @param returnValue
-	 * @return
-	 */
-	protected abstract T getImmutableValue(S returnValue);
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	protected Object convertValueToImmutable(Object value) {
+		
+		Object converted = null;
+		if(value instanceof String){
+			converted = (new ImmutableString((String)value));
+			
+		}else if(value instanceof Short){
+			converted = (new ImmutableShort((Short)value));
+			
+		}else if(value instanceof Integer){
+			converted = (new ImmutableInteger((Integer)value));
+			
+		}else if(value instanceof ImmutableMapper){
+			converted = ((ImmutableMapper<T>)value).mapper();
+			
+		}else if(value instanceof List){
+			List<?> tempList = (List<?>) value;
+			List<Object> convertedList = new ArrayList<Object>(tempList.size());
+			
+			for(Object listValue : tempList){
+				
+				Object convertedValue = convertValueToImmutable(listValue);
+				
+				if(convertedValue != null){
+					convertedList.add(convertedValue);
+				}
+			}
+
+			converted = new ImmutableCustomList(ImmutableList.copyOf(convertedList));
+		}else{
+			log.equals("Unable to convert object:"+value);
+		}
+		
+		return converted;
+	}
+
 }

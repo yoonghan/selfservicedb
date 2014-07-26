@@ -1,6 +1,9 @@
 package com.jaring.jom.store.jdbi.entity;
 
-public class EnumRatingBean implements Cloneable{
+import com.jaring.jom.store.jdbi.caches.impl.ImmutableMapper;
+import com.jaring.jom.store.jdbi.entity.immutable.ImmutableEnumRatingBean;
+
+public class EnumRatingBean implements ImmutableMapper<ImmutableEnumRatingBean>{
 	private Integer enumRatingId;
 	private Integer rating;
 	
@@ -25,5 +28,10 @@ public class EnumRatingBean implements Cloneable{
 		enumRatingBean.setRating(rating);
 		enumRatingBean.setEnumRatingId(enumRatingId);
 		return enumRatingBean;
+	}
+
+	@Override
+	public ImmutableEnumRatingBean mapper() { 
+		return new ImmutableEnumRatingBean(enumRatingId, rating);
 	}
 }

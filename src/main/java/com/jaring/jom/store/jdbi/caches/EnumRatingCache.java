@@ -6,7 +6,7 @@ import com.jaring.jom.store.jdbi.entity.immutable.ImmutableEnumRatingBean;
 import com.jaring.jom.store.jdbi.impl.JDBISetting;
 import com.jaring.jom.store.jdbi.sql.EnumRatingJDBI;
 
-public class EnumRatingCache extends AbstractQuerySingleResultCache<EnumRatingBean, ImmutableEnumRatingBean, EnumRatingJDBI> {
+public class EnumRatingCache extends AbstractQuerySingleResultCache<ImmutableEnumRatingBean, EnumRatingJDBI> {
 	
 	EnumRatingCache() {
 		super(JDBISetting.IMG_CONNECTION_SERVICE, EnumRatingJDBI.class, "enumrating");
@@ -23,11 +23,4 @@ public class EnumRatingCache extends AbstractQuerySingleResultCache<EnumRatingBe
 		return new ImmutableEnumRatingBean();
 	}
 
-	@Override
-	protected ImmutableEnumRatingBean getImmutableValue(
-			EnumRatingBean returnValue) {
-		return new ImmutableEnumRatingBean(
-				returnValue.getEnumRatingId(),
-				returnValue.getRating());
-	}
 }

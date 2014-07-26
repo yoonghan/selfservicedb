@@ -1,6 +1,9 @@
 package com.jaring.jom.store.jdbi.entity;
 
-public class MenuListBean implements Cloneable{
+import com.jaring.jom.store.jdbi.caches.impl.ImmutableMapper;
+import com.jaring.jom.store.jdbi.entity.immutable.ImmutableMenuListBean;
+
+public class MenuListBean implements ImmutableMapper<ImmutableMenuListBean>{
 	
 	private Short menuId;
 	private MenuBean menu;
@@ -46,5 +49,10 @@ public class MenuListBean implements Cloneable{
 		mlb.setMenu(menu);
 		mlb.setMenuId(menuId);
 		return mlb;
+	}
+
+	@Override
+	public ImmutableMenuListBean mapper() {
+		return new ImmutableMenuListBean(menuId, menu, level, levelOrder);
 	}
 }

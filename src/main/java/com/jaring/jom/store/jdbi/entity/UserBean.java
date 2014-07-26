@@ -2,7 +2,10 @@ package com.jaring.jom.store.jdbi.entity;
 
 import java.sql.Timestamp;
 
-public class UserBean implements Cloneable{
+import com.jaring.jom.store.jdbi.caches.impl.ImmutableMapper;
+import com.jaring.jom.store.jdbi.entity.immutable.ImmutableUserBean;
+
+public class UserBean implements ImmutableMapper<ImmutableUserBean>, Cloneable{
 	private Long       userId;
 	private String     identity;
 	private Integer    typeMap;
@@ -186,5 +189,10 @@ public class UserBean implements Cloneable{
 		clonedUserBean.setLastModifiedTimeStamp(lastModifiedTimeStamp);
 
 		return clonedUserBean;
+	}
+
+	@Override
+	public ImmutableUserBean mapper() {
+		return new ImmutableUserBean(userId, identity, lastLoginTypeMap, status, email, name, googleAuthId, facebookAuthId);
 	}
 }

@@ -13,9 +13,6 @@ import org.skife.jdbi.v2.DBI;
 import com.google.common.collect.ImmutableList;
 import com.jaring.jom.logging.impl.Log;
 import com.jaring.jom.logging.log.LogFactory;
-import com.jaring.jom.store.jdbi.entity.immutable.ImmutableInteger;
-import com.jaring.jom.store.jdbi.entity.immutable.ImmutableShort;
-import com.jaring.jom.store.jdbi.entity.immutable.ImmutableString;
 import com.jaring.jom.store.jdbi.impl.BasicJDBICommand;
 import com.jaring.jom.store.jdbi.impl.PropertyFiles;
 import com.jaring.jom.store.jdbi.util.DataSourceHandler;
@@ -23,8 +20,8 @@ import com.jaring.jom.util.common.PropertyLoaderUtil;
 
 import static com.jaring.jom.store.jdbi.impl.PropertyFiles.*;
 
-public abstract class AbstractQueryMultiResultCache<S, T extends Immutable<S>, V extends Immutable<?>, U extends BasicJDBICommand> 
-		extends AbstractQuerySingleResultCache<S, T, U>{
+public abstract class AbstractQueryMultiResultCache<T extends Immutable<?>, V extends Immutable<?>, U extends BasicJDBICommand> 
+		extends AbstractQuerySingleResultCache<T, U>{
 	
 	private final Log log = LogFactory.getLogger(this.getClass().getName());
 	
@@ -117,7 +114,8 @@ public abstract class AbstractQueryMultiResultCache<S, T extends Immutable<S>, V
 		if(returnAllValues != null){
 			for(Object value : returnAllValues){
 				
-				V convertedValue = convertValueToImmutable(value);
+				@SuppressWarnings("unchecked")
+				V convertedValue = (V)convertValueToImmutable(value);
 				
 				if(convertedValue != null){
 					convertedList.add(
@@ -130,32 +128,6 @@ public abstract class AbstractQueryMultiResultCache<S, T extends Immutable<S>, V
 		return immutableArray;
 	}
 	
-	@SuppressWarnings("unchecked")
-	private V convertValueToImmutable(Object value) {
-		
-		if(value == null)
-			return null;
-		
-		V converted = null;
-		if(value instanceof String){
-			converted = (V)(new ImmutableString((String)value));
-			
-		}else if(value instanceof Short){
-			converted = (V)(new ImmutableShort((Short)value));
-			
-		}else if(value instanceof Integer){
-			converted = (V)(new ImmutableInteger((Integer)value));
-			
-		}else if(value instanceof ImmutableMapper){
-			converted = ((ImmutableMapper<V>)value).mapper();
-			
-		}else{
-			log.equals("Unable to convert object:"+value);
-		}
-		
-		return converted;
-	}
-
 	public void clearFindAllCache(){
 		REFRESH_CACHE.set(true);
 	}

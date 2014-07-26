@@ -1,6 +1,9 @@
 package com.jaring.jom.store.jdbi.entity;
 
-public class EnumCountryBean implements Cloneable{
+import com.jaring.jom.store.jdbi.caches.impl.ImmutableMapper;
+import com.jaring.jom.store.jdbi.entity.immutable.ImmutableEnumCountryBean;
+
+public class EnumCountryBean implements ImmutableMapper<ImmutableEnumCountryBean>{
 	private String enumCountryId;
 	private String country;
 	private String state;
@@ -28,12 +31,9 @@ public class EnumCountryBean implements Cloneable{
 	public void setState(String state) {
 		this.state = state;
 	}
-	
-	public EnumCountryBean clone(){
-		EnumCountryBean enumCountryBean = new EnumCountryBean();
-		enumCountryBean.setState(state);
-		enumCountryBean.setCountry(country);
-		enumCountryBean.setEnumCountryId(enumCountryId);
-		return enumCountryBean;
+
+	@Override
+	public ImmutableEnumCountryBean mapper() { 
+		return new ImmutableEnumCountryBean(enumCountryId, country, state);
 	}
 }

@@ -10,7 +10,7 @@ import com.jaring.jom.store.jdbi.impl.JDBISetting;
 import com.jaring.jom.store.jdbi.sql.CategoryJDBI;
 
 
-public class CategoryCache extends AbstractQueryMultiResultCache<String, ImmutableString, ImmutableCategoryBean, CategoryJDBI> {
+public class CategoryCache extends AbstractQueryMultiResultCache<ImmutableString, ImmutableCategoryBean, CategoryJDBI> {
 	
 	CategoryCache() {
 		super(JDBISetting.IMG_CONNECTION_SERVICE, CategoryJDBI.class, "category");
@@ -20,11 +20,6 @@ public class CategoryCache extends AbstractQueryMultiResultCache<String, Immutab
 	protected String getReturnValue(String key, CategoryJDBI sqlConnectionObject) {
 		String value = sqlConnectionObject.select(key);
 		return value;
-	}
-
-	@Override
-	protected ImmutableString getImmutableValue(String returnValue) {
-		return new ImmutableString(returnValue);
 	}
 
 	@Override

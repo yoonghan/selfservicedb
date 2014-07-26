@@ -2,7 +2,10 @@ package com.jaring.jom.store.jdbi.entity;
 
 import java.sql.Date;
 
-public class ImageBean implements Cloneable{
+import com.jaring.jom.store.jdbi.caches.impl.ImmutableMapper;
+import com.jaring.jom.store.jdbi.entity.immutable.ImmutableImageBean;
+
+public class ImageBean implements ImmutableMapper<ImmutableImageBean>{
 	private String imageId;
 	private String name;
 	private String location;
@@ -178,34 +181,9 @@ public class ImageBean implements Cloneable{
 	public void setEnumRatingId(Integer enumRatingId) {
 		this.enumRatingId = enumRatingId;
 	}
-	
-	public ImageBean clone(){
-		ImageBean clonedImageBean = new ImageBean();
-		
-		clonedImageBean.setImageId(imageId);
-		clonedImageBean.setName(name);
-		clonedImageBean.setLocation(location);
-		
-		clonedImageBean.setExposure(exposure);
-		clonedImageBean.setSettings(settings);
-		clonedImageBean.setTools(tools);
-		clonedImageBean.setMetaDate(metaDate);
-		clonedImageBean.setDescription(description);
-		clonedImageBean.setcTime(cTime);
-		clonedImageBean.setcUser(cUser);
-		clonedImageBean.setmTime(mTime);
-		clonedImageBean.setURI(URI);
-		
-		clonedImageBean.setEnumStatusId(enumStatusId);
 
-		clonedImageBean.setUserId(userId);
-		clonedImageBean.setEnumCountryId(enumCountryId);
-		clonedImageBean.setEnumRatingId(enumRatingId);
-		
-		clonedImageBean.setCountry(country);
-		clonedImageBean.setRating(rating);
-		clonedImageBean.setUser(user.clone());
-		
-		return clonedImageBean;
+	@Override
+	public ImmutableImageBean mapper() {
+		return new ImmutableImageBean(imageId, name, location, exposure, settings, tools, metaDate, description, URI);
 	}
 }

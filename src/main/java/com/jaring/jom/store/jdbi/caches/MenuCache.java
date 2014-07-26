@@ -8,7 +8,7 @@ import com.jaring.jom.store.jdbi.entity.immutable.ImmutableMenuBean;
 import com.jaring.jom.store.jdbi.impl.JDBISetting;
 import com.jaring.jom.store.jdbi.sql.MenuJDBI;
 
-public class MenuCache extends AbstractQuerySingleResultCache<MenuBean, ImmutableMenuBean, MenuJDBI> {
+public class MenuCache extends AbstractQuerySingleResultCache<ImmutableMenuBean, MenuJDBI> {
 
 	private final Log log = LogFactory.getLogger(this.getClass().getName());
 	
@@ -33,16 +33,4 @@ public class MenuCache extends AbstractQuerySingleResultCache<MenuBean, Immutabl
 	protected ImmutableMenuBean getDefaultValueIfNull() {
 		return new ImmutableMenuBean();
 	}
-
-	@Override
-	protected ImmutableMenuBean getImmutableValue(MenuBean returnValue) {
-		
-		return 	new ImmutableMenuBean(returnValue.getMenuId(),
-				returnValue.getToolTip(),
-				returnValue.getTextDisplay(),
-				returnValue.getImageURI(),
-				returnValue.getLinkURI(),
-				returnValue.getEnumTypeId());
-	}
-
 }

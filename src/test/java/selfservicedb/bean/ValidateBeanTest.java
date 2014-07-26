@@ -18,14 +18,12 @@ import com.jaring.jom.store.jdbi.entity.UserBean;
 import com.jaring.jom.store.jdbi.entity.immutable.ImmutableEnumCountryBean;
 import com.jaring.jom.store.jdbi.entity.immutable.ImmutableEnumRatingBean;
 import com.jaring.jom.store.jdbi.entity.immutable.ImmutableImageBean;
-import com.jaring.jom.store.jdbi.entity.immutable.ImmutableImageList;
 import com.jaring.jom.store.jdbi.entity.immutable.ImmutableMenuBean;
-import com.jaring.jom.store.jdbi.entity.immutable.ImmutableMenuList;
 import com.jaring.jom.store.jdbi.entity.immutable.ImmutableMenuListBean;
 import com.jaring.jom.store.jdbi.entity.immutable.ImmutableUserBean;
 
 
-public class ValidateBean {
+public class ValidateBeanTest {
 	/**
 	 * This test is to carry out for recursive loops in getter setter. 
 	 * A very frequent error.
@@ -35,9 +33,7 @@ public class ValidateBean {
 		invokeMethod(new ImmutableEnumCountryBean());
 		invokeMethod(new ImmutableEnumRatingBean());
 		invokeMethod(new ImmutableImageBean());
-		invokeMethod(new ImmutableImageList());
 		invokeMethod(new ImmutableMenuBean());
-		invokeMethod(new ImmutableMenuList());
 		invokeMethod(new ImmutableMenuListBean());
 		invokeMethod(new ImmutableUserBean());
 		invokeMethod(new CategoryBean());

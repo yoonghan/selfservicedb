@@ -5,7 +5,7 @@ import com.jaring.jom.store.jdbi.entity.immutable.ImmutableInteger;
 import com.jaring.jom.store.jdbi.impl.JDBISetting;
 import com.jaring.jom.store.jdbi.sql.ImageCounterJDBI;
 
-public class ImageCounterCache extends AbstractQuerySingleResultCache<Integer, ImmutableInteger, ImageCounterJDBI>{
+public class ImageCounterCache extends AbstractQuerySingleResultCache<ImmutableInteger, ImageCounterJDBI>{
 	
 	ImageCounterCache() {
 		super(JDBISetting.IMG_CONNECTION_SERVICE, ImageCounterJDBI.class,"imagecounter");
@@ -22,8 +22,4 @@ public class ImageCounterCache extends AbstractQuerySingleResultCache<Integer, I
 		return new ImmutableInteger(-1);
 	}
 
-	@Override
-	protected ImmutableInteger getImmutableValue(Integer returnValue) {
-		return new ImmutableInteger(returnValue);
-	}
 }
