@@ -1,6 +1,5 @@
 package com.jaring.jom.store.jdbi.caches.impl;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -60,11 +59,7 @@ public abstract class AbstractQuerySingleResultCache<T extends Immutable<?>, U e
 
 		CachePropertyBean cacheBean = new CachePropertyBean(cacheSettingName);
 		
-		try {
-			new PropertyLoaderUtil().loadProperty(PropertyFiles.CACHE_PROP, cacheBean);
-		} catch (IOException | ClassNotFoundException | IllegalAccessException e) {
-			log.warn("Load property error, loading default values:"+e.getMessage());
-		}
+		PropertyLoaderUtil.loadProperty(PropertyFiles.CACHE_PROP, cacheBean);
 		
 		this.RESULT_SOURCE_CACHE = initCacheLoader(JDBISetting.RESULT_CACHE_SIZE, cacheBean.getTimeValue(), cacheBean.getTimeUnit());
 		log.info("Cache Instance created.");

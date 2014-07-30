@@ -1,6 +1,5 @@
 package com.jaring.jom.store.jdbi.util;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.concurrent.ExecutionException;
@@ -40,19 +39,15 @@ public class DataSourceHandler {
 		
 		if( dbConn == null){
 			DBPropertyBean propBean = new DBPropertyBean(dsName);
-			try {
-				new PropertyLoaderUtil().loadProperty(PropertyFiles.DB_PROP, propBean);
-				
-				if(propBean != null)
-					dbConn = getConnection(dsName, propBean);
-				
-				if(dbConn != null){
-					DATA_SOURCE_CACHE.put(dsName, dbConn);
-				}
-				
-			} catch (ClassNotFoundException | IllegalAccessException| IOException e) {
-				log.error("Database properties no readable"+PropertyFiles.CACHE_PROP, e);;
+			PropertyLoaderUtil.loadProperty(PropertyFiles.DB_PROP, propBean);
+			
+			if(propBean != null)
+				dbConn = getConnection(dsName, propBean);
+			
+			if(dbConn != null){
+				DATA_SOURCE_CACHE.put(dsName, dbConn);
 			}
+			
 			
 		}
 		return dbConn;

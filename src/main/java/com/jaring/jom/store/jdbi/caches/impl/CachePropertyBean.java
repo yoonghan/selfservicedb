@@ -7,9 +7,9 @@ import com.jaring.jom.logging.impl.Log;
 import com.jaring.jom.logging.log.LogFactory;
 import com.jaring.jom.store.jdbi.impl.JDBISetting;
 import com.jaring.jom.store.jdbi.impl.PropertyFiles;
-import com.jaring.jom.util.impl.PropertyMapperImpl;
+import com.jaring.jom.util.bean.PropertyBeanMapper;
 
-class CachePropertyBean implements PropertyMapperImpl {
+class CachePropertyBean implements PropertyBeanMapper {
 	
 	private final Log log = LogFactory.getLogger("com.self.care.store.jdbi.caches.impl.CachePropertyBean");
 	
@@ -24,7 +24,7 @@ class CachePropertyBean implements PropertyMapperImpl {
 		CACHE_NAME=cacheName;
 	}
 	
-	public void map(Properties property) throws IllegalAccessException {
+	public void map(Properties property){
 		String timeUnit = property.getProperty(CACHE_NAME + PropertyFiles.TIME_UNIT_KEY);
 		String timeValue = property.getProperty(CACHE_NAME + PropertyFiles.TIME_VALUE_KEY);
 		String worldWaitingInSecondsValue = property.getProperty(CACHE_NAME + PropertyFiles.WORLD_WAITING_IN_SECONDS_VALUE);

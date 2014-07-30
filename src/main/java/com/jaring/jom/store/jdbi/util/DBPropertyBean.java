@@ -5,9 +5,9 @@ import java.util.Properties;
 import com.jaring.jom.logging.impl.Log;
 import com.jaring.jom.logging.log.LogFactory;
 import com.jaring.jom.store.jdbi.impl.PropertyFiles;
-import com.jaring.jom.util.impl.PropertyMapperImpl;
+import com.jaring.jom.util.bean.PropertyBeanMapper;
 
-class DBPropertyBean implements PropertyMapperImpl {
+class DBPropertyBean implements PropertyBeanMapper {
 
 	private final Log log = LogFactory.getLogger(this.getClass().getName());
 	
@@ -25,7 +25,7 @@ class DBPropertyBean implements PropertyMapperImpl {
 	
 	
 	@Override
-	public void map(Properties property) throws IllegalAccessException {
+	public void map(Properties property) {
 		int connectionType = 1;
 		try{
 			connectionType = Integer.parseInt(property.getProperty(CONN_NAME+PropertyFiles.CONN_TYPE),10);

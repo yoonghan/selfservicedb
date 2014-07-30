@@ -8,6 +8,7 @@
   </parent>
   <properties>
   	<jjutility.version>1.0.0</jjutility.version>
+  	<self.service.log.version>1.0.0</self.service.log.version>
   </properties>
   <dependencies>
   	<dependency>
@@ -17,11 +18,6 @@
 	  <scope>provided</scope>
 	</dependency>
 	<dependency>
-		<groupId>com.google.inject</groupId>
-		<artifactId>guice</artifactId>
-		<version>3.0</version>
-	</dependency>
-	<dependency>
 		<groupId>com.google.guava</groupId>
 		<artifactId>guava</artifactId>
 		<version>${guava.version}</version>
@@ -29,14 +25,14 @@
 	</dependency>
 	<dependency>
 		<groupId>jom.jaring</groupId>
-		<artifactId>jjutility</artifactId>
+		<artifactId>JomJaringUtilities_scala</artifactId>
 		<version>${jjutility.version}</version>
 		<scope>provided</scope>
 	</dependency>
 	<dependency>
 		<groupId>jom.jaring</groupId>
 		<artifactId>selfservicelogging</artifactId>
-		<version>1.0.0</version>
+		<version>${self.service.log.version}</version>
 		<scope>provided</scope>
 	</dependency>
 	<dependency>
